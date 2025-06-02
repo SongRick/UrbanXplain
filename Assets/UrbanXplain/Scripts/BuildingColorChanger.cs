@@ -15,13 +15,13 @@ namespace UrbanXplain
 
         [Header("Plot Function Color Mapping")]
         // Color to use for plots designated as Function 1 (e.g., Residential).
-        public Color colorForFunction1 = Color.red;
+        public Color colorForFunction1 = Color.yellow;
         // Color to use for plots designated as Function 2 (e.g., Commercial).
         public Color colorForFunction2 = Color.blue;
         // Color to use for plots designated as Function 3 (e.g., Public Buildings).
         public Color colorForFunction3 = Color.green;
         // Color to use for plots designated as Function 4 (e.g., Cultural/Entertainment).
-        public Color colorForFunction4 = Color.yellow;
+        public Color colorForFunction4 = Color.red;
 
         [Header("Plot Energy Consumption Color Mapping")]
         // Color representing highly energy-efficient plots (e.g., EnergyConsumption = 1).
@@ -39,6 +39,8 @@ namespace UrbanXplain
         public KeyCode highlightKeyByFunction = KeyCode.Alpha1;
         // KeyCode to toggle the plot energy consumption color view.
         public KeyCode highlightKeyByEnergy = KeyCode.Alpha2;
+
+        public UIControl uIControl;
 
         void Start()
         {
@@ -60,12 +62,16 @@ namespace UrbanXplain
             // Check for input to toggle the function-based color view.
             if (Input.GetKeyDown(highlightKeyByFunction))
             {
+                if (uIControl.IsInputMode())
+                    return;
                 ToggleFunctionColorView();
             }
 
             // Check for input to toggle the energy-based color view.
             if (Input.GetKeyDown(highlightKeyByEnergy))
             {
+                if (uIControl.IsInputMode())
+                    return;
                 ToggleEnergyColorView();
             }
         }

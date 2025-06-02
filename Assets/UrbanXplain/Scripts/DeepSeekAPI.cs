@@ -67,7 +67,7 @@ namespace UrbanXplain
         private IEnumerator ExecuteTestJsonProcessing()
         {
             // Wait until BuildingSpawnerJson is assigned and has finished loading its data.
-            yield return new WaitUntil(() => buildingSpawnerJson != null && buildingSpawnerJson.IsApiDataLoaded);
+            yield return new WaitUntil(() => buildingSpawnerJson != null && buildingSpawnerJson.IsCsvDataLoaded);
             ProcessTestJsonData(); // Renamed from TestSpawnerJson for clarity.
         }
 

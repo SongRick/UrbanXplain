@@ -1,61 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking; // 用于 UnityWebRequest
-// using MySqlConnector; // 这行需要被移除或注释掉
+using System.IO; // 需要 System.IO 来读取文件
+using System.Linq; // 需要 Linq 来方便地处理字符串数组
 
 namespace UrbanXplain
 {
-    // --- 用于从 API 反序列化 JSON 数据的辅助类 ---
-    // 注意：这些类的字段名需要与 API 返回的 JSON 对象的键名大小写一致
-    // 或者与您在 server.js 中 SELECT 语句选择的列名大小写一致。
-    // MySQL 列名通常不区分大小写，但 Node.js/JavaScript 返回的 JSON 键名是区分的。
-    // 确保 server.js 中的 SELECT 语句返回的列名与这里的字段名匹配。
-    // 例如，如果数据库列是 `Function` (大写F)，那么这里也应该是 `Function`。
-
-    [System.Serializable]
-    public class BuildingPrefabDataApi
+    public class BuildingSpawnerJson : MonoBehaviour // 类名可以保留，或者改成更合适的如 BuildingSpawnerCsv
     {
-        public int ID;
-        public float Length;
-        public float Width;
-        public int Function; // 假设 API 返回的 JSON 键是 "Function"
-        public int FloorType;
-        public int Material;
-    }
-
-    [System.Serializable]
-    public class EmptyLandDataApi
-    {
-        public int ID;
-        public float Length;
-        public float Width;
-        public float StartPosX;
-        public float StartPosY;
-        public float StartPosZ;
-        public float RotationY;
-        public int T;
-        public int S;
-    }
-
-    // Unity 的 JsonUtility 不能直接解析根为数组的 JSON，需要一个包装类
-    [System.Serializable]
-    public class JsonArrayWrapper<T>
-    {
-        public T[] items;
-    }
-
-    // Manages loading building and land plot data from an API.
-    // It handles spawning building prefabs onto designated land plots based on various criteria,
-    // specific plot types (S=1, cultural), and placement rules.
-    public class BuildingSpawnerJson : MonoBehaviour
-    {
-        [Header("API Settings")]
-        // 您的云服务器公网 IP 和 API 运行的端口
-        private string baseApiUrl = "http://117.72.214.108:3000/api"; // 请确保 IP 和端口正确
-
-        // [Header("Database Settings")] // 这部分不再需要，已由 API 处理
-        // private string connectionString = "Server=localhost;Database=simcity;Uid=llm;Pwd=123456;"; // 移除
+        [Header("CSV File Names (in StreamingAssets)")]
+        public string buildingPrefabCsvFileName = "buildingprefab.csv";
+        public string emptyLandCsvFileName = "emptyland.csv";
 
         [Header("Building Prefabs")]
         [SerializeField] public GameObject[] buildings;
@@ -66,147 +21,244 @@ namespace UrbanXplain
 
         private float minBuildingDistance = 5f;
 
-        // 缓存从 API 加载的建筑预制件元数据，键为建筑 ID
         private Dictionary<int, BuildingPrefabData> buildingPrefabCache = new Dictionary<int, BuildingPrefabData>();
-        // 缓存从 API 加载的空地地块数据，键为空地 ID
         private Dictionary<int, EmptyLandData> emptyLandCache = new Dictionary<int, EmptyLandData>();
 
         private static HashSet<int> usedSpecialBuildings = new HashSet<int>();
         private static HashSet<int> usedCulturalBuildings = new HashSet<int>();
-        // 标记初始数据是否已从 API 加载完成
-        public bool IsApiDataLoaded { get; private set; } = false; // 变量名修改以反映数据来源
+        public bool IsCsvDataLoaded { get; private set; } = false; // 修改变量名
 
         void Start()
         {
-            // 启动从 API 加载所有必要数据的过程
-            StartCoroutine(LoadDataFromApi());
+            StartCoroutine(LoadDataFromCsv());
         }
 
-        // 协程，用于按顺序加载建筑预制件和空地数据
-        public IEnumerator LoadDataFromApi() // 方法名修改
+        public IEnumerator LoadDataFromCsv()
         {
-            buildingPrefabCache.Clear(); // 清空旧缓存，以防重载
-            emptyLandCache.Clear();      // 清空旧缓存
+            buildingPrefabCache.Clear();
+            emptyLandCache.Clear();
 
-            yield return StartCoroutine(LoadBuildingPrefabsFromApi());
-            yield return StartCoroutine(LoadEmptyLandsFromApi());
+            yield return StartCoroutine(LoadBuildingPrefabsFromCsv());
+            yield return StartCoroutine(LoadEmptyLandsFromCsv());
 
             if (buildingPrefabCache.Count > 0 && emptyLandCache.Count > 0)
             {
-                IsApiDataLoaded = true; // 仅当成功加载到数据时才设置标志
-                Debug.Log("API 数据加载完成。");
+                IsCsvDataLoaded = true;
+                Debug.Log("CSV 数据加载完成。");
             }
             else
             {
-                IsApiDataLoaded = false;
-                Debug.LogError("API 数据加载失败或未获取到任何数据。请检查 API 连接和服务器日志。");
+                IsCsvDataLoaded = false;
+                Debug.LogError("CSV 数据加载失败或未获取到任何数据。请确保 CSV 文件在 StreamingAssets 文件夹中且格式正确。");
             }
         }
 
-        // 协程，从 API 加载建筑预制件元数据
-        IEnumerator LoadBuildingPrefabsFromApi()
+        IEnumerator LoadBuildingPrefabsFromCsv()
         {
-            string url = baseApiUrl + "/buildingprefabs"; // API 端点
-            using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+            string filePath = Path.Combine(Application.streamingAssetsPath, buildingPrefabCsvFileName);
+            string csvText = "";
+
+            if (Application.platform == RuntimePlatform.Android)
             {
-                Debug.Log($"正在从 API 请求建筑预制件数据: {url}");
-                yield return webRequest.SendWebRequest();
-
-                if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
-                    webRequest.result == UnityWebRequest.Result.ProtocolError ||
-                    webRequest.result == UnityWebRequest.Result.DataProcessingError)
+                // 对于 Android，StreamingAssets 需要通过 UnityWebRequest 读取
+                UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(filePath);
+                yield return www.SendWebRequest();
+                if (www.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
                 {
-                    Debug.LogError($"加载建筑预制件数据时出错: {webRequest.error} - 响应: {webRequest.downloadHandler.text}");
+                    Debug.LogError($"加载 buildingprefab.csv 失败 (Android): {www.error}");
+                    yield break;
                 }
-                else
+                csvText = www.downloadHandler.text;
+            }
+            else
+            {
+                if (!File.Exists(filePath))
                 {
-                    Debug.Log("收到建筑预制件 API 响应: " + webRequest.downloadHandler.text);
-                    // Unity 的 JsonUtility 需要将 JSON 数组包装在一个对象中
-                    string jsonResponse = "{\"items\":" + webRequest.downloadHandler.text + "}";
-                    JsonArrayWrapper<BuildingPrefabDataApi> wrapper = JsonUtility.FromJson<JsonArrayWrapper<BuildingPrefabDataApi>>(jsonResponse);
+                    Debug.LogError($"找不到 buildingprefab.csv 文件于: {filePath}");
+                    yield break;
+                }
+                csvText = File.ReadAllText(filePath);
+            }
 
-                    if (wrapper != null && wrapper.items != null)
+            ParseBuildingPrefabCsv(csvText);
+            Debug.Log($"已处理 buildingprefab.csv。缓存数量: {buildingPrefabCache.Count}");
+        }
+
+        IEnumerator LoadEmptyLandsFromCsv()
+        {
+            string filePath = Path.Combine(Application.streamingAssetsPath, emptyLandCsvFileName);
+            string csvText = "";
+
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(filePath);
+                yield return www.SendWebRequest();
+                if (www.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
+                {
+                    Debug.LogError($"加载 emptyland.csv 失败 (Android): {www.error}");
+                    yield break;
+                }
+                csvText = www.downloadHandler.text;
+            }
+            else
+            {
+                if (!File.Exists(filePath))
+                {
+                    Debug.LogError($"找不到 emptyland.csv 文件于: {filePath}");
+                    yield break;
+                }
+                csvText = File.ReadAllText(filePath);
+            }
+
+            ParseEmptyLandCsv(csvText);
+            Debug.Log($"已处理 emptyland.csv。缓存数量: {emptyLandCache.Count}");
+        }
+
+        void ParseBuildingPrefabCsv(string csvText)
+        {
+            StringReader reader = new StringReader(csvText);
+            string line;
+            bool isFirstLine = true; // 跳过标题行
+            Dictionary<string, int> headerMap = new Dictionary<string, int>();
+
+            while ((line = reader.ReadLine()) != null)
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                string[] values = ParseCsvLine(line); // 使用辅助函数处理带引号的逗号
+
+                if (isFirstLine)
+                {
+                    for (int i = 0; i < values.Length; i++)
                     {
-                        foreach (var apiData in wrapper.items)
-                        {
-                            BuildingPrefabData data = new BuildingPrefabData
-                            {
-                                ID = apiData.ID,
-                                Length = apiData.Length,
-                                Width = apiData.Width,
-                                Function = apiData.Function,
-                                FloorType = apiData.FloorType,
-                                Material = apiData.Material
-                            };
-                            buildingPrefabCache[data.ID] = data;
-                        }
-                        Debug.Log($"成功从 API 加载并解析了 {buildingPrefabCache.Count} 条建筑配置。");
+                        headerMap[values[i].Trim('"')] = i; // 移除引号并存储列名和索引
                     }
-                    else
+                    isFirstLine = false;
+                    continue;
+                }
+
+                try
+                {
+                    BuildingPrefabData data = new BuildingPrefabData
                     {
-                        Debug.LogError("解析建筑预制件 JSON 失败，或者未找到任何条目。原始 JSON: " + webRequest.downloadHandler.text);
-                    }
+                        // 使用列名映射来获取数据，更健壮
+                        ID = int.Parse(values[headerMap["ID"]].Trim('"')),
+                        Length = float.Parse(values[headerMap["Length"]].Trim('"')),
+                        Width = float.Parse(values[headerMap["Width"]].Trim('"')),
+                        Function = int.Parse(values[headerMap["Function"]].Trim('"')),
+                        FloorType = int.Parse(values[headerMap["FloorType"]].Trim('"')),
+                        Material = int.Parse(values[headerMap["Material"]].Trim('"'))
+                        // 注意：您的 buildingprefab.csv 还有 "Name", "Classification", "Height", "PivotPoint" 列
+                        // 如果需要这些数据，请在 BuildingPrefabData 结构体中添加相应字段，并在这里解析
+                    };
+                    buildingPrefabCache[data.ID] = data;
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"解析 buildingprefab.csv 行数据时出错: '{line}'. 错误: {ex.Message}");
                 }
             }
         }
 
-        // 协程，从 API 加载空地地块数据
-        IEnumerator LoadEmptyLandsFromApi()
+        void ParseEmptyLandCsv(string csvText)
         {
-            string url = baseApiUrl + "/emptylands"; // API 端点
-            using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+            StringReader reader = new StringReader(csvText);
+            string line;
+            bool isFirstLine = true;
+            Dictionary<string, int> headerMap = new Dictionary<string, int>();
+
+            while ((line = reader.ReadLine()) != null)
             {
-                Debug.Log($"正在从 API 请求空地数据: {url}");
-                yield return webRequest.SendWebRequest();
+                if (string.IsNullOrWhiteSpace(line)) continue;
 
-                if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
-                    webRequest.result == UnityWebRequest.Result.ProtocolError ||
-                    webRequest.result == UnityWebRequest.Result.DataProcessingError)
-                {
-                    Debug.LogError($"加载空地数据时出错: {webRequest.error} - 响应: {webRequest.downloadHandler.text}");
-                }
-                else
-                {
-                    Debug.Log("收到空地 API 响应: " + webRequest.downloadHandler.text);
-                    string jsonResponse = "{\"items\":" + webRequest.downloadHandler.text + "}";
-                    JsonArrayWrapper<EmptyLandDataApi> wrapper = JsonUtility.FromJson<JsonArrayWrapper<EmptyLandDataApi>>(jsonResponse);
+                string[] values = ParseCsvLine(line);
 
-                    if (wrapper != null && wrapper.items != null)
+                if (isFirstLine)
+                {
+                    for (int i = 0; i < values.Length; i++)
                     {
-                        foreach (var apiData in wrapper.items)
-                        {
-                            EmptyLandData data = new EmptyLandData
-                            {
-                                ID = apiData.ID,
-                                Length = apiData.Length,
-                                Width = apiData.Width,
-                                Position = new Vector3(apiData.StartPosX, apiData.StartPosY, apiData.StartPosZ),
-                                RotationY = apiData.RotationY,
-                                T = apiData.T,
-                                S = apiData.S,
-                                BuildingUsageCount = new Dictionary<int, int>(), // 初始化使用计数
-                                Summary = "" // 初始化摘要字符串
-                            };
-                            emptyLandCache[data.ID] = data;
-                        }
-                        Debug.Log($"成功从 API 加载并解析了 {emptyLandCache.Count} 条空地配置。");
+                        headerMap[values[i].Trim('"')] = i;
+                    }
+                    isFirstLine = false;
+                    continue;
+                }
+
+                try
+                {
+                    EmptyLandData data = new EmptyLandData
+                    {
+                        ID = int.Parse(values[headerMap["ID"]].Trim('"')),
+                        Length = float.Parse(values[headerMap["Length"]].Trim('"')),
+                        Width = float.Parse(values[headerMap["Width"]].Trim('"')),
+                        Position = new Vector3(
+                            float.Parse(values[headerMap["StartPosX"]].Trim('"')),
+                            float.Parse(values[headerMap["StartPosY"]].Trim('"')),
+                            float.Parse(values[headerMap["StartPosZ"]].Trim('"'))
+                        ),
+                        RotationY = float.Parse(values[headerMap["RotationY"]].Trim('"')),
+                        T = int.Parse(values[headerMap["T"]].Trim('"')),
+                        S = int.Parse(values[headerMap["S"]].Trim('"')),
+                        BuildingUsageCount = new Dictionary<int, int>(),
+                        Summary = ""
+                        // 注意：您的 emptyland.csv 还有 "Name", "Height", "EndPosX", "EndPosY", "EndPosZ" 列
+                        // 如果需要这些数据，请在 EmptyLandData 结构体中添加相应字段，并在这里解析
+                    };
+                    emptyLandCache[data.ID] = data;
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"解析 emptyland.csv 行数据时出错: '{line}'. 错误: {ex.Message}");
+                }
+            }
+        }
+
+        // 辅助函数：解析包含引号和逗号的CSV行
+        // 这个解析器比较基础，对于非常复杂的CSV可能不够健壮
+        private string[] ParseCsvLine(string line)
+        {
+            List<string> result = new List<string>();
+            System.Text.StringBuilder currentField = new System.Text.StringBuilder();
+            bool inQuotes = false;
+
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+
+                if (c == '"')
+                {
+                    if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
+                    {
+                        // 处理 "" -> "
+                        currentField.Append('"');
+                        i++; // 跳过下一个引号
                     }
                     else
                     {
-                        Debug.LogError("解析空地 JSON 失败，或者未找到任何条目。原始 JSON: " + webRequest.downloadHandler.text);
+                        inQuotes = !inQuotes;
                     }
                 }
+                else if (c == ',' && !inQuotes)
+                {
+                    result.Add(currentField.ToString());
+                    currentField.Clear();
+                }
+                else
+                {
+                    currentField.Append(c);
+                }
             }
+            result.Add(currentField.ToString()); // 添加最后一个字段
+            return result.ToArray();
         }
 
         // --- 以下是您原有的建筑生成逻辑，基本保持不变 ---
-        // 它们现在将使用从 API 加载并填充到缓存中的数据
+        // 它们现在将使用从 CSV 加载并填充到缓存中的数据
 
         public void SpawnBuilding(string emptyID, string function, string floorType, string material)
         {
-            if (!IsApiDataLoaded) // 检查 API 数据是否已加载
+            if (!IsCsvDataLoaded)
             {
-                Debug.LogError("API 数据尚未加载。无法生成建筑。");
+                Debug.LogError("CSV 数据尚未加载。无法生成建筑。");
                 return;
             }
 
@@ -304,23 +356,37 @@ namespace UrbanXplain
             if (landData.T == 0)
             {
                 int maxBuildings = Mathf.FloorToInt(landData.Length / 72f);
+
                 if (maxBuildings == 0)
                 {
                     Debug.LogWarning($"Plot {landData.ID} (T=0, Position: {basePos}, Length: {landData.Length}) does not have enough length to place any 72x72 cultural buildings.");
                     return;
                 }
+
                 for (int i = 0; i < maxBuildings; i++)
                 {
                     Vector3 offset;
                     float spacing = 72f + minBuildingDistance;
+
                     switch (landData.RotationY)
                     {
-                        case 0f: offset = new Vector3(36f + i * spacing, 0f, 36f); break;
-                        case 90f: offset = new Vector3(36f, 0f, -36f - i * spacing); break;
-                        case 180f: offset = new Vector3(-36f - i * spacing, 0f, -36f); break;
-                        case 270f: offset = new Vector3(-36f, 0f, 36f + i * spacing); break;
-                        default: Debug.LogError($"Plot {landData.ID} (T=0) has an unsupported RotationY value ({landData.RotationY}). Skipping this building index."); continue;
+                        case 0f:
+                            offset = new Vector3(36f + i * spacing, 0f, 36f);
+                            break;
+                        case 90f:
+                            offset = new Vector3(36f, 0f, -36f - i * spacing);
+                            break;
+                        case 180f:
+                            offset = new Vector3(-36f - i * spacing, 0f, -36f);
+                            break;
+                        case 270f:
+                            offset = new Vector3(-36f, 0f, 36f + i * spacing);
+                            break;
+                        default:
+                            Debug.LogError($"Plot {landData.ID} (T=0) has an unsupported RotationY value ({landData.RotationY}). Skipping this building index.");
+                            continue;
                     }
+
                     relativeSpawnOffsets.Add(offset);
                 }
             }
@@ -329,39 +395,65 @@ namespace UrbanXplain
                 switch (landData.RotationY)
                 {
                     case 0f:
-                        relativeSpawnOffsets.Add(new Vector3(36f, 0f, 36f)); relativeSpawnOffsets.Add(new Vector3(136f, 0f, 36f)); relativeSpawnOffsets.Add(new Vector3(236f, 0f, 36f)); relativeSpawnOffsets.Add(new Vector3(136f, 0f, -64f)); break;
+                        relativeSpawnOffsets.Add(new Vector3(36f, 0f, 36f));
+                        relativeSpawnOffsets.Add(new Vector3(136f, 0f, 36f));
+                        relativeSpawnOffsets.Add(new Vector3(236f, 0f, 36f));
+                        relativeSpawnOffsets.Add(new Vector3(136f, 0f, -64f));
+                        break;
                     case 90f:
-                        relativeSpawnOffsets.Add(new Vector3(36f, 0f, -36f)); relativeSpawnOffsets.Add(new Vector3(36f, 0f, -136f)); relativeSpawnOffsets.Add(new Vector3(36f, 0f, -236f)); relativeSpawnOffsets.Add(new Vector3(-64f, 0f, -136f)); break;
+                        relativeSpawnOffsets.Add(new Vector3(36f, 0f, -36f));
+                        relativeSpawnOffsets.Add(new Vector3(36f, 0f, -136f));
+                        relativeSpawnOffsets.Add(new Vector3(36f, 0f, -236f));
+                        relativeSpawnOffsets.Add(new Vector3(-64f, 0f, -136f));
+                        break;
                     case 180f:
-                        relativeSpawnOffsets.Add(new Vector3(-36f, 0f, -36f)); relativeSpawnOffsets.Add(new Vector3(-136f, 0f, -36f)); relativeSpawnOffsets.Add(new Vector3(-236f, 0f, -36f)); relativeSpawnOffsets.Add(new Vector3(-136f, 0f, 64f)); break;
+                        relativeSpawnOffsets.Add(new Vector3(-36f, 0f, -36f));
+                        relativeSpawnOffsets.Add(new Vector3(-136f, 0f, -36f));
+                        relativeSpawnOffsets.Add(new Vector3(-236f, 0f, -36f));
+                        relativeSpawnOffsets.Add(new Vector3(-136f, 0f, 64f));
+                        break;
                     case 270f:
-                        relativeSpawnOffsets.Add(new Vector3(-36f, 0f, 36f)); relativeSpawnOffsets.Add(new Vector3(-36f, 0f, 136f)); relativeSpawnOffsets.Add(new Vector3(-36f, 0f, 236f)); relativeSpawnOffsets.Add(new Vector3(64f, 0f, 136f)); break;
-                    default: Debug.LogError($"Plot {landData.ID} (T=1) has an unsupported RotationY value ({landData.RotationY}). Cannot determine fixed positions."); return;
+                        relativeSpawnOffsets.Add(new Vector3(-36f, 0f, 36f));
+                        relativeSpawnOffsets.Add(new Vector3(-36f, 0f, 136f));
+                        relativeSpawnOffsets.Add(new Vector3(-36f, 0f, 236f));
+                        relativeSpawnOffsets.Add(new Vector3(64f, 0f, 136f));
+                        break;
+                    default:
+                        Debug.LogError($"Plot {landData.ID} (T=1) has an unsupported RotationY value ({landData.RotationY}). Cannot determine fixed positions.");
+                        return;
                 }
             }
 
             if (relativeSpawnOffsets.Count == 0)
             {
-                Debug.LogWarning($"Plot {landData.ID} (Position {basePos}) could not calculate any valid spawn positions for cultural buildings."); return;
+                Debug.LogWarning($"Plot {landData.ID} (Position {basePos}) could not calculate any valid spawn positions for cultural buildings.");
+                return;
             }
 
             int spawnedCount = 0;
+
             foreach (Vector3 relativeOffset in relativeSpawnOffsets)
             {
                 List<BuildingPrefabData> validPrefabs = new List<BuildingPrefabData>();
-                foreach (BuildingPrefabData prefab in buildingPrefabCache.Values)
+
+                foreach (BuildingPrefabData prefab_iter in buildingPrefabCache.Values)
                 {
-                    if (prefab.Function == 4) validPrefabs.Add(prefab);
+                    if (prefab_iter.Function == 4)
+                        validPrefabs.Add(prefab_iter);
                 }
-                if (validPrefabs.Count == 0) continue;
+
+                if (validPrefabs.Count == 0)
+                    continue;
 
                 BuildingPrefabData selectedPrefab = validPrefabs[Random.Range(0, validPrefabs.Count)];
                 usedCulturalBuildings.Add(selectedPrefab.ID);
                 IncrementUsageCount(landData, selectedPrefab.ID);
+
                 Vector3 spawnPosition = basePos + relativeOffset;
                 InstantiateBuilding(selectedPrefab.ID, spawnPosition, buildingWorldRotation, landObject.transform);
                 spawnedCount++;
             }
+
             if (spawnedCount == 0 && relativeSpawnOffsets.Count > 0)
             {
                 Debug.LogWarning($"Plot {landData.ID} (Position {basePos}): Planned {relativeSpawnOffsets.Count} cultural building positions, but failed to generate any.");
@@ -373,8 +465,10 @@ namespace UrbanXplain
             float L = landData.Length;
             Vector3 basePos = landData.Position;
             float parentRotationY = landObject.transform.eulerAngles.y;
+
             var (row1Start, row2Start, direction) = GetGenerationParameters(parentRotationY, basePos);
             GenerateBuildingRow(L, row1Start, direction, function, floorType, material, landObject.transform, parentRotationY, landData);
+
             if (Mathf.Approximately(landData.Width, 72f))
             {
                 GenerateBuildingRow(L, row2Start, direction, function, floorType, material, landObject.transform, parentRotationY, landData);
@@ -386,6 +480,7 @@ namespace UrbanXplain
             float newLength = 100f;
             float newWidth = 72f;
             float newSceneRotationY = landObject.transform.eulerAngles.y + 90f;
+
             Vector3 newBasePosForRow1 = CalculateNewPosition(36, landData.Position, landData.RotationY);
             Vector3 newBasePosForRow2 = CalculateNewPosition(72, landData.Position, landData.RotationY);
 
@@ -395,9 +490,11 @@ namespace UrbanXplain
                 Width = newWidth,
                 Position = newBasePosForRow1,
                 RotationY = landData.RotationY + 90f,
-                BuildingUsageCount = landData.BuildingUsageCount // 共享使用计数
+                BuildingUsageCount = landData.BuildingUsageCount
             };
+
             Vector3 placementDirection = GetNewDirection(newLandForAdditional.RotationY);
+
             GenerateBuildingRow(newLength, newBasePosForRow1, placementDirection, function, floorType, material, landObject.transform, newSceneRotationY, newLandForAdditional);
             GenerateBuildingRow(newLength, newBasePosForRow2, placementDirection, function, floorType, material, landObject.transform, newSceneRotationY, newLandForAdditional);
         }
@@ -405,6 +502,7 @@ namespace UrbanXplain
         Vector3 CalculateNewPosition(float offsetWithinNewArea, Vector3 originalPos, float originalDbRotation)
         {
             float totalOffsetFromOriginalEdge = 100f + offsetWithinNewArea;
+
             return originalDbRotation switch
             {
                 90f => new Vector3(originalPos.x, originalPos.y, originalPos.z - totalOffsetFromOriginalEdge),
@@ -417,43 +515,71 @@ namespace UrbanXplain
         Vector3 GetNewDirection(float rotationY)
         {
             float normalizedRotation = Mathf.Repeat(rotationY, 360f);
-            if (Mathf.Abs(normalizedRotation - 90f) < 1f) return new Vector3(0, 0, -1);
-            if (Mathf.Abs(normalizedRotation - 180f) < 1f) return new Vector3(-1, 0, 0);
-            if (Mathf.Abs(normalizedRotation - 270f) < 1f) return new Vector3(0, 0, 1);
+
+            if (Mathf.Abs(normalizedRotation - 90f) < 1f)
+                return new Vector3(0, 0, -1);
+            if (Mathf.Abs(normalizedRotation - 180f) < 1f)
+                return new Vector3(-1, 0, 0);
+            if (Mathf.Abs(normalizedRotation - 270f) < 1f)
+                return new Vector3(0, 0, 1);
+
             return new Vector3(1, 0, 0);
         }
 
         (Vector3, Vector3, Vector3) GetGenerationParameters(float sceneRotationY, Vector3 basePos)
         {
             float normalizedRotation = Mathf.Repeat(sceneRotationY, 360f);
-            if (Mathf.Abs(normalizedRotation - 90f) < 1f) return (new Vector3(basePos.x + 36f, basePos.y, basePos.z), new Vector3(basePos.x + 72f, basePos.y, basePos.z), new Vector3(0, 0, -1));
-            if (Mathf.Abs(normalizedRotation - 180f) < 1f) return (new Vector3(basePos.x, basePos.y, basePos.z - 36f), new Vector3(basePos.x, basePos.y, basePos.z - 72f), new Vector3(-1, 0, 0));
-            if (Mathf.Abs(normalizedRotation - 270f) < 1f) return (new Vector3(basePos.x - 36f, basePos.y, basePos.z), new Vector3(basePos.x - 72f, basePos.y, basePos.z), new Vector3(0, 0, 1));
-            return (new Vector3(basePos.x, basePos.y, basePos.z + 36f), new Vector3(basePos.x, basePos.y, basePos.z + 72f), new Vector3(1, 0, 0));
+
+            if (Mathf.Abs(normalizedRotation - 90f) < 1f)
+                return (new Vector3(basePos.x + 36f, basePos.y, basePos.z),
+                       new Vector3(basePos.x + 72f, basePos.y, basePos.z),
+                       new Vector3(0, 0, -1));
+
+            if (Mathf.Abs(normalizedRotation - 180f) < 1f)
+                return (new Vector3(basePos.x, basePos.y, basePos.z - 36f),
+                       new Vector3(basePos.x, basePos.y, basePos.z - 72f),
+                       new Vector3(-1, 0, 0));
+
+            if (Mathf.Abs(normalizedRotation - 270f) < 1f)
+                return (new Vector3(basePos.x - 36f, basePos.y, basePos.z),
+                       new Vector3(basePos.x - 72f, basePos.y, basePos.z),
+                       new Vector3(0, 0, 1));
+
+            return (new Vector3(basePos.x, basePos.y, basePos.z + 36f),
+                   new Vector3(basePos.x, basePos.y, basePos.z + 72f),
+                   new Vector3(1, 0, 0));
         }
 
         void GenerateBuildingRow(float maxLength, Vector3 startPos, Vector3 direction, int function, int floorType, int material, Transform parent, float buildingRotationY, EmptyLandData landData)
         {
             Vector3 currentPos = startPos;
             float remainingLength = maxLength;
+
             while (remainingLength > 20f)
             {
                 var candidates = GetValidBuildings(function, floorType, remainingLength - (currentPos == startPos ? 0 : minBuildingDistance), landData);
-                if (candidates.Count == 0) break;
+
+                if (candidates.Count == 0)
+                    break;
+
                 BuildingPrefabData selected = candidates[Random.Range(0, candidates.Count)];
                 Vector3 spawnOffsetDueToLength = direction * (selected.Length / 2f);
                 Vector3 spawnPos = currentPos + spawnOffsetDueToLength;
+
                 if (currentPos != startPos)
                 {
                     spawnPos = currentPos + direction * (minBuildingDistance + selected.Length / 2f);
                 }
+
                 InstantiateBuilding(selected.ID, spawnPos, Quaternion.Euler(0, buildingRotationY, 0), parent);
                 IncrementUsageCount(landData, selected.ID);
+
                 float consumedLength = selected.Length;
                 if (currentPos != startPos || (currentPos == startPos && remainingLength < maxLength))
                 {
                     consumedLength += minBuildingDistance;
                 }
+
                 currentPos += direction * consumedLength;
                 remainingLength -= consumedLength;
             }
@@ -462,13 +588,18 @@ namespace UrbanXplain
         List<BuildingPrefabData> GetValidBuildings(int function, int floorType, float maxLength, EmptyLandData landData)
         {
             List<BuildingPrefabData> result = new List<BuildingPrefabData>();
-            foreach (var prefab in buildingPrefabCache.Values)
+
+            foreach (var prefab_iter in buildingPrefabCache.Values)
             {
-                if (prefab.Function == function && prefab.FloorType == floorType && prefab.Length <= maxLength && GetUsageCount(landData, prefab.ID) < 3)
+                if (prefab_iter.Function == function &&
+                    prefab_iter.FloorType == floorType &&
+                    prefab_iter.Length <= maxLength &&
+                    GetUsageCount(landData, prefab_iter.ID) < 3)
                 {
-                    result.Add(prefab);
+                    result.Add(prefab_iter);
                 }
             }
+
             return result;
         }
 
@@ -479,12 +610,15 @@ namespace UrbanXplain
                 Debug.LogError($"Invalid prefab ID: {prefabId}. Array size is {buildings.Length}.");
                 return null;
             }
+
             GameObject prefab = buildings[prefabId];
+
             if (prefab == null)
             {
                 Debug.LogError($"Prefab not assigned for ID: {prefabId} in the 'buildings' array.");
                 return null;
             }
+
             return Instantiate(prefab, position, rotation, parent);
         }
 
@@ -503,7 +637,9 @@ namespace UrbanXplain
                     }
                 }
             }
+
             List<int> keys = new List<int>(emptyLandCache.Keys);
+
             foreach (int key in keys)
             {
                 EmptyLandData landData = emptyLandCache[key];
@@ -511,6 +647,7 @@ namespace UrbanXplain
                 landData.Summary = "";
                 emptyLandCache[key] = landData;
             }
+
             usedSpecialBuildings.Clear();
             usedCulturalBuildings.Clear();
             Debug.Log("All spawned buildings and plot summaries cleared. All building usage counts reset.");
@@ -518,22 +655,28 @@ namespace UrbanXplain
 
         private int GetUsageCount(EmptyLandData landData, int buildingId)
         {
-            if (landData.BuildingUsageCount.TryGetValue(buildingId, out int count)) return count;
+            if (landData.BuildingUsageCount.TryGetValue(buildingId, out int count))
+                return count;
+
             return 0;
         }
 
         private void IncrementUsageCount(EmptyLandData landData, int buildingId)
         {
-            if (landData.BuildingUsageCount.ContainsKey(buildingId)) landData.BuildingUsageCount[buildingId]++;
-            else landData.BuildingUsageCount[buildingId] = 1;
+            if (landData.BuildingUsageCount.ContainsKey(buildingId))
+                landData.BuildingUsageCount[buildingId]++;
+            else
+                landData.BuildingUsageCount[buildingId] = 1;
         }
 
         public void StoreLandSummary(string emptyID, string summary)
         {
             if (!int.TryParse(emptyID, out int landId))
             {
-                Debug.LogError($"StoreLandSummary: Invalid land ID format: {emptyID}"); return;
+                Debug.LogError($"StoreLandSummary: Invalid land ID format: {emptyID}");
+                return;
             }
+
             if (emptyLandCache.TryGetValue(landId, out EmptyLandData landData))
             {
                 EmptyLandData updatedLandData = landData;
@@ -550,17 +693,17 @@ namespace UrbanXplain
         {
             if (emptyLandCache.TryGetValue(landId, out EmptyLandData landData))
             {
-                if (!string.IsNullOrEmpty(landData.Summary)) return landData.Summary;
-                else return "No design summary is available for this plot yet.";
+                if (!string.IsNullOrEmpty(landData.Summary))
+                    return landData.Summary;
+                else
+                    return "No design summary is available for this plot yet.";
             }
+
             return $"Information for land plot ID {landId} not found.";
         }
 
-        // --- 内部数据结构，用于缓存在 Unity 中使用的数据 ---
-        // 注意：这些结构体的字段名应与您的生成逻辑代码中使用的名称一致
-
-        // 用于在 Unity 内部缓存和使用的建筑预制件数据结构
-        public struct BuildingPrefabData // 可以设为 public 或 internal，如果其他脚本需要访问
+        // 内部数据结构
+        public struct BuildingPrefabData
         {
             public int ID;
             public float Length;
@@ -568,10 +711,14 @@ namespace UrbanXplain
             public int Function;
             public int FloorType;
             public int Material;
+            // 如果您需要CSV中的 "Name", "Classification", "Height", "PivotPoint" 字段，请在这里添加
+            // public string Name;
+            // public string Classification;
+            // public float Height;
+            // public int PivotPoint;
         }
 
-        // 用于在 Unity 内部缓存和使用的空地地块数据结构
-        public struct EmptyLandData // 可以设为 public 或 internal
+        public struct EmptyLandData
         {
             public int ID;
             public float Length;
@@ -582,6 +729,12 @@ namespace UrbanXplain
             public int S;
             public Dictionary<int, int> BuildingUsageCount;
             public string Summary;
+            // 如果您需要CSV中的 "Name", "Height", "EndPosX", "EndPosY", "EndPosZ" 字段，请在这里添加
+            // public string Name;
+            // public float Height;
+            // public float EndPosX;
+            // public float EndPosY;
+            // public float EndPosZ;
         }
     }
 }
