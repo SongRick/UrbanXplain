@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO; // 需要 System.IO 来读取文件
 using System.Linq; // 需要 Linq 来方便地处理字符串数组
+using UnityEngine.Networking; // 确保引入了 Networking
 
 namespace UrbanXplain
 {
@@ -38,6 +39,8 @@ namespace UrbanXplain
             buildingPrefabCache.Clear();
             emptyLandCache.Clear();
 
+            // Debug.Log($"Current platform: {Application.platform}"); // 可以添加这行来确认平台
+
             yield return StartCoroutine(LoadBuildingPrefabsFromCsv());
             yield return StartCoroutine(LoadEmptyLandsFromCsv());
 
@@ -49,69 +52,128 @@ namespace UrbanXplain
             else
             {
                 IsCsvDataLoaded = false;
-                Debug.LogError("CSV 数据加载失败或未获取到任何数据。请确保 CSV 文件在 StreamingAssets 文件夹中且格式正确。");
+                Debug.LogError("CSV 数据加载失败或未获取到任何数据。请确保 CSV 文件在 StreamingAssets 文件夹中且格式正确，并检查网络请求（针对WebGL/Android）。");
             }
         }
 
         IEnumerator LoadBuildingPrefabsFromCsv()
         {
             string filePath = Path.Combine(Application.streamingAssetsPath, buildingPrefabCsvFileName);
+            // 对于 WebGL 和 Android，路径实际上是 URL，必须用 UnityWebRequest
+            // 对于其他平台，UnityWebRequest 也能处理 file:// URL，所以可以统一使用
+            // 但要注意 file:// URL 的格式和权限问题，特别是 macOS 和 Linux
+            // 更安全的做法是明确区分平台
+
             string csvText = "";
+            bool loadSuccess = false;
 
-            if (Application.platform == RuntimePlatform.Android)
+            Debug.Log($"Attempting to load Building Prefabs CSV from: {filePath}");
+
+            // WebGL 和 Android 平台必须使用 UnityWebRequest
+            if (Application.platform == RuntimePlatform.WebGLPlayer || Application.platform == RuntimePlatform.Android)
             {
-                // 对于 Android，StreamingAssets 需要通过 UnityWebRequest 读取
-                UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(filePath);
+                UnityWebRequest www = UnityWebRequest.Get(filePath);
                 yield return www.SendWebRequest();
-                if (www.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
+
+                if (www.result == UnityWebRequest.Result.Success)
                 {
-                    Debug.LogError($"加载 buildingprefab.csv 失败 (Android): {www.error}");
-                    yield break;
+                    csvText = www.downloadHandler.text;
+                    loadSuccess = true;
+                    Debug.Log($"成功加载 {buildingPrefabCsvFileName} (WebGL/Android)");
                 }
-                csvText = www.downloadHandler.text;
+                else
+                {
+                    Debug.LogError($"加载 {buildingPrefabCsvFileName} 失败 (WebGL/Android): {www.error} at path {filePath}");
+                }
+                www.Dispose(); // 及时释放资源
             }
-            else
+            else // 其他平台 (PC, Mac, Linux Editor/Standalone, iOS Editor/Standalone)
             {
-                if (!File.Exists(filePath))
+                if (File.Exists(filePath))
                 {
-                    Debug.LogError($"找不到 buildingprefab.csv 文件于: {filePath}");
-                    yield break;
+                    try
+                    {
+                        csvText = File.ReadAllText(filePath);
+                        loadSuccess = true;
+                        Debug.Log($"成功加载 {buildingPrefabCsvFileName} (Desktop/iOS)");
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogError($"读取 {buildingPrefabCsvFileName} 时发生错误: {ex.Message} at path {filePath}");
+                    }
                 }
-                csvText = File.ReadAllText(filePath);
+                else
+                {
+                    Debug.LogError($"找不到 {buildingPrefabCsvFileName} 文件于: {filePath}");
+                }
             }
 
-            ParseBuildingPrefabCsv(csvText);
-            Debug.Log($"已处理 buildingprefab.csv。缓存数量: {buildingPrefabCache.Count}");
+            if (loadSuccess && !string.IsNullOrEmpty(csvText))
+            {
+                ParseBuildingPrefabCsv(csvText);
+                Debug.Log($"已处理 {buildingPrefabCsvFileName}。缓存数量: {buildingPrefabCache.Count}");
+            }
+            else if (loadSuccess && string.IsNullOrEmpty(csvText))
+            {
+                Debug.LogWarning($"{buildingPrefabCsvFileName} 文件已加载但内容为空。");
+            }
         }
 
         IEnumerator LoadEmptyLandsFromCsv()
         {
             string filePath = Path.Combine(Application.streamingAssetsPath, emptyLandCsvFileName);
             string csvText = "";
+            bool loadSuccess = false;
 
-            if (Application.platform == RuntimePlatform.Android)
+            Debug.Log($"Attempting to load Empty Lands CSV from: {filePath}");
+
+            if (Application.platform == RuntimePlatform.WebGLPlayer || Application.platform == RuntimePlatform.Android)
             {
-                UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(filePath);
+                UnityWebRequest www = UnityWebRequest.Get(filePath);
                 yield return www.SendWebRequest();
-                if (www.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
+
+                if (www.result == UnityWebRequest.Result.Success)
                 {
-                    Debug.LogError($"加载 emptyland.csv 失败 (Android): {www.error}");
-                    yield break;
+                    csvText = www.downloadHandler.text;
+                    loadSuccess = true;
+                    Debug.Log($"成功加载 {emptyLandCsvFileName} (WebGL/Android)");
                 }
-                csvText = www.downloadHandler.text;
+                else
+                {
+                    Debug.LogError($"加载 {emptyLandCsvFileName} 失败 (WebGL/Android): {www.error} at path {filePath}");
+                }
+                www.Dispose();
             }
             else
             {
-                if (!File.Exists(filePath))
+                if (File.Exists(filePath))
                 {
-                    Debug.LogError($"找不到 emptyland.csv 文件于: {filePath}");
-                    yield break;
+                    try
+                    {
+                        csvText = File.ReadAllText(filePath);
+                        loadSuccess = true;
+                        Debug.Log($"成功加载 {emptyLandCsvFileName} (Desktop/iOS)");
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogError($"读取 {emptyLandCsvFileName} 时发生错误: {ex.Message} at path {filePath}");
+                    }
                 }
-                csvText = File.ReadAllText(filePath);
+                else
+                {
+                    Debug.LogError($"找不到 {emptyLandCsvFileName} 文件于: {filePath}");
+                }
             }
 
-            ParseEmptyLandCsv(csvText);
-            Debug.Log($"已处理 emptyland.csv。缓存数量: {emptyLandCache.Count}");
+            if (loadSuccess && !string.IsNullOrEmpty(csvText))
+            {
+                ParseEmptyLandCsv(csvText);
+                Debug.Log($"已处理 {emptyLandCsvFileName}。缓存数量: {emptyLandCache.Count}");
+            }
+            else if (loadSuccess && string.IsNullOrEmpty(csvText))
+            {
+                Debug.LogWarning($"{emptyLandCsvFileName} 文件已加载但内容为空。");
+            }
         }
 
         void ParseBuildingPrefabCsv(string csvText)
