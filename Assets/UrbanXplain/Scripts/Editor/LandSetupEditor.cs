@@ -10,15 +10,15 @@ namespace UrbanXplain
         // Constant for the name of the parent GameObject containing all land plot GameObjects.
         private const string EmptyLandsParentName = "EmptyLands000";
         // Constant for the name of an optional higher-level parent GameObject (e.g., a scene organizer).
-        private const string UrbanGPTParentName = "UrbanGPT"; // Renamed from CityLLMParentName for consistency if it's your project name
+        private const string UrbanXplainParentName = "UrbanXplain"; // Renamed from CityLLMParentName for consistency if it's your project name
 
         // Adds a ChildColorToggler component to each direct child GameObject of the 'EmptyLandsParentName' GameObject.
         // This is step 1 in a two-step setup process.
-        [MenuItem("UrbanGPT Tools/1. Add ChildColorToggler to Land Plots")] // Menu item path
+        [MenuItem("UrbanXplain Tools/1. Add ChildColorToggler to Land Plots")] // Menu item path
         private static void AddTogglerComponentToLandPlots() // Renamed method
         {
             // Attempt to find the 'UrbanGPTParentName' GameObject first.
-            GameObject urbanGPTParent = GameObject.Find(UrbanGPTParentName);
+            GameObject urbanGPTParent = GameObject.Find(UrbanXplainParentName);
             GameObject emptyLandsParent = null;
 
             if (urbanGPTParent != null)
@@ -32,7 +32,7 @@ namespace UrbanXplain
                 else
                 {
                     // Error if 'EmptyLandsParentName' is not found under 'UrbanGPTParentName'.
-                    string errorMsg = $"Could not find a child object named '{EmptyLandsParentName}' under the '{UrbanGPTParentName}' GameObject.";
+                    string errorMsg = $"Could not find a child object named '{EmptyLandsParentName}' under the '{UrbanXplainParentName}' GameObject.";
                     Debug.LogError(errorMsg);
                     EditorUtility.DisplayDialog("Error", errorMsg, "OK");
                     return;
@@ -44,14 +44,14 @@ namespace UrbanXplain
                 emptyLandsParent = GameObject.Find(EmptyLandsParentName);
                 if (emptyLandsParent == null)
                 {
-                    string errorMsg = $"Could not find a GameObject named '{EmptyLandsParentName}' or '{UrbanGPTParentName}/{EmptyLandsParentName}' in the scene.";
+                    string errorMsg = $"Could not find a GameObject named '{EmptyLandsParentName}' or '{UrbanXplainParentName}/{EmptyLandsParentName}' in the scene.";
                     Debug.LogError(errorMsg);
                     EditorUtility.DisplayDialog("Error", errorMsg, "OK");
                     return;
                 }
                 else
                 {
-                    Debug.LogWarning($"'{UrbanGPTParentName}' GameObject not found. Using '{EmptyLandsParentName}' found at the scene root directly.");
+                    Debug.LogWarning($"'{UrbanXplainParentName}' GameObject not found. Using '{EmptyLandsParentName}' found at the scene root directly.");
                 }
             }
 
@@ -94,7 +94,7 @@ namespace UrbanXplain
         // Automatically finds all ChildColorToggler components on land plots and assigns them
         // to the 'colorTogglerArray' field of the DeepSeekAPI script instance in the scene.
         // This is step 2 in the setup process.
-        [MenuItem("UrbanGPT Tools/2. Auto-Assign Color Togglers to DeepSeekAPI")] // Menu item path
+        [MenuItem("UrbanXplain Tools/2. Auto-Assign Color Togglers to DeepSeekAPI")] // Menu item path
         private static void AutoAssignTogglersToDeepSeekAPI()
         {
             // Find the DeepSeekAPI script instance in the scene.
@@ -106,7 +106,7 @@ namespace UrbanXplain
             }
 
             // Locate the 'EmptyLandsParentName' GameObject, similar to the first tool.
-            GameObject urbanGPTParent = GameObject.Find(UrbanGPTParentName);
+            GameObject urbanGPTParent = GameObject.Find(UrbanXplainParentName);
             GameObject emptyLandsParent = null;
 
             if (urbanGPTParent != null)
@@ -125,7 +125,7 @@ namespace UrbanXplain
 
             if (emptyLandsParent == null)
             {
-                EditorUtility.DisplayDialog("Error", $"Could not find the '{EmptyLandsParentName}' GameObject (neither under '{UrbanGPTParentName}' nor globally).", "OK");
+                EditorUtility.DisplayDialog("Error", $"Could not find the '{EmptyLandsParentName}' GameObject (neither under '{UrbanXplainParentName}' nor globally).", "OK");
                 return;
             }
 
