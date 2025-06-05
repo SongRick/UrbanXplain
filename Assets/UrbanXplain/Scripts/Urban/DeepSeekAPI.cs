@@ -405,6 +405,62 @@ namespace UrbanXplain
             public string role;    // Role of the message sender (e.g., "system", "user").
             public string content; // Content of the message.
         }
+        public void ApplyJsonLayout(string jsonString)
+        {
+            if (buildingSpawnerJson == null)
+            {
+                Debug.LogError("BuildingSpawnerJson reference is not set in DeepSeekAPI. Cannot apply JSON layout.");
+                return;
+            }
+            // 确保 BuildingSpawnerJson 的 CSV 数据已加载，因为 ProcessLandData 依赖它
+            if (!buildingSpawnerJson.IsCsvDataLoaded)
+            {
+                Debug.LogWarning("DeepSeekAPI: BuildingSpawnerJson data is not loaded yet. Layout not applied. Please ensure BuildingSpawnerJson completes its setup.");
+                // 你可以在这里添加一个提示给用户，或者让 PresetManager 来处理这个等待逻辑
+                return;
+            }
+
+            if (string.IsNullOrEmpty(jsonString))
+            {
+                Debug.LogWarning("ApplyJsonLayout received an empty JSON string.");
+                return;
+            }
+
+            Debug.Log("DeepSeekAPI: Applying JSON layout from provided string.");
+            List<EmptyLandData> landDataList = null;
+            try
+            {
+                // 尝试反序列化JSON字符串
+                landDataList = JsonConvert.DeserializeObject<List<EmptyLandData>>(jsonString);
+            }
+            catch (JsonReaderException readerEx)
+            {
+                Debug.LogError($"JSON Reader Error while applying layout: {readerEx.Message}\nProblematic JSON (first 500 chars): {jsonString.Substring(0, Mathf.Min(jsonString.Length, 500))}");
+                return;
+            }
+            catch (JsonSerializationException serEx)
+            {
+                Debug.LogError($"JSON Serialization Error while applying layout: {serEx.Message}\nProblematic JSON (first 500 chars): {jsonString.Substring(0, Mathf.Min(jsonString.Length, 500))}");
+                return;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Error deserializing provided JSON: {e.Message}\nProblematic JSON (first 500 chars): {jsonString.Substring(0, Mathf.Min(jsonString.Length, 500))}");
+                return;
+            }
+
+            if (landDataList != null)
+            {
+                // 调用现有的 ProcessLandData 方法，它会处理建筑的移除和生成
+                ProcessLandData(landDataList);
+                InitializeAllColorTogglers(); // 确保更新地块相关的可视化
+                Debug.Log("DeepSeekAPI: JSON layout applied successfully.");
+            }
+            else
+            {
+                Debug.LogError("DeepSeekAPI: Failed to deserialize JSON into land data list from provided string (landDataList is null after parsing).");
+            }
+        }
     }
 
 #if UNITY_EDITOR

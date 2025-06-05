@@ -20,7 +20,7 @@ namespace UrbanXplain
         public GameObject emptyLandsParent;
         [SerializeField] public GameObject[] landArray;
 
-        private float minBuildingDistance = 5f;
+        private float minBuildingDistance = 10f;
 
         private Dictionary<int, BuildingPrefabData> buildingPrefabCache = new Dictionary<int, BuildingPrefabData>();
         private Dictionary<int, EmptyLandData> emptyLandCache = new Dictionary<int, EmptyLandData>();
@@ -371,12 +371,12 @@ namespace UrbanXplain
 
         void GenerateS1Building(EmptyLandData landData, GameObject landObject)
         {
-            List<int> availableIds = new List<int> { 237, 238 };
+            List<int> availableIds = new List<int> { 235, 236 };
             availableIds.RemoveAll(id => usedSpecialBuildings.Contains(id) || GetUsageCount(landData, id) >= 2);
 
             if (availableIds.Count == 0)
             {
-                Debug.LogError("Special buildings for S=1 plots (IDs 237/238) are all used or have reached their usage limit on this plot!");
+                Debug.LogError("Special buildings for S=1 plots (IDs 235/236) are all used or have reached their usage limit on this plot!");
                 return;
             }
 

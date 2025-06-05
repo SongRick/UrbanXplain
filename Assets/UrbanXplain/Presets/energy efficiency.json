@@ -1,0 +1,346 @@
+[
+  {
+    "EmptyID": "1",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "This southwest lot is designed as mid-rise residential apartments with concrete construction for energy efficiency. Its location near the city edge provides quieter living while concrete materials reduce carbon footprint. The design supports mixed-use zoning by complementing nearby commercial areas, promoting walkability and low-energy living within the district."
+  },
+  {
+    "EmptyID": "2",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Positioned near residential zones, this lot features low-rise street-front shops with concrete materials to minimize energy use. The commercial function provides essential services to surrounding neighborhoods, fulfilling mixed-use requirements while concrete construction aligns with low-carbon priorities. Its small scale ensures efficient energy performance."
+  },
+  {
+    "EmptyID": "3",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Designed as mid-rise residential units with concrete, this lot balances housing needs with energy efficiency. Located in the western sector, it creates a residential cluster that reduces transportation demands. The concrete materials and moderate height lower carbon emissions while supporting the mixed-use community framework."
+  },
+  {
+    "EmptyID": "4",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "This southern lot hosts mid-rise apartments using energy-efficient concrete construction. Its residential function complements adjacent commercial services, forming a complete neighborhood unit. The design prioritizes low-carbon living through material choice and scale, reducing energy consumption while meeting mixed-use zoning requirements."
+  },
+  {
+    "EmptyID": "5",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Mid-rise residential buildings with concrete materials provide sustainable housing in this central-south location. The design minimizes energy use through efficient construction while serving mixed-use goals by integrating with nearby commercial services. Concrete's thermal properties enhance energy performance for low-carbon living."
+  },
+  {
+    "EmptyID": "6",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "As a low-rise commercial hub with concrete construction, this lot offers energy-efficient retail spaces. Positioned within residential areas, it provides convenient services that reduce travel needs. The concrete materials and small scale align with low-carbon priorities while fulfilling mixed-use zoning requirements."
+  },
+  {
+    "EmptyID": "7",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "This lot features low-rise commercial facilities with concrete for optimal energy efficiency. Located near housing clusters, it supports daily needs within walking distance, reducing transportation emissions. The design uses sustainable materials to meet low-carbon goals while enhancing commercial-residential integration."
+  },
+  {
+    "EmptyID": "8",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 75,
+    "Summary": "As an extra-large lot, this high-rise shopping mall with glass curtain wall serves as a western commercial anchor. Despite higher energy use, sustainable technologies are incorporated. It provides regional retail services, fulfilling mixed-use requirements while adhering to size constraints through iconic but regulated design."
+  },
+  {
+    "EmptyID": "9",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 65,
+    "Summary": "This central-west lot hosts a high-rise commercial complex with concrete to balance density and energy efficiency. Its location near major transport routes maximizes accessibility while concrete reduces carbon footprint. The design supports mixed-use zoning by providing offices and retail near residential areas."
+  },
+  {
+    "EmptyID": "10",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Designed as low-rise commercial spaces with concrete, this lot offers neighborhood services with minimal energy use. Positioned near residential zones, it enables walkable access to amenities. The sustainable materials and scale align with low-carbon priorities while meeting mixed-use requirements."
+  },
+  {
+    "EmptyID": "11",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "This lot houses a mid-rise public clinic with concrete construction for community healthcare needs. Energy-efficient design reduces operational emissions while serving mixed-use areas. Central location ensures accessibility, minimizing transportation impacts. The concrete materials support low-carbon goals and public function requirements."
+  },
+  {
+    "EmptyID": "12",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Mid-rise residential apartments with concrete materials create sustainable housing in this northwestern location. The design prioritizes energy efficiency through material choice and scale, reducing carbon footprint. It complements nearby commercial services, supporting mixed-use objectives and 15-minute neighborhood principles."
+  },
+  {
+    "EmptyID": "13",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Concrete mid-rise residential buildings provide low-carbon housing in this northern lot. Energy-efficient design minimizes environmental impact while integrating with adjacent commercial zones. The residential function balances mixed-use requirements, with walkable access reducing transportation emissions in the district."
+  },
+  {
+    "EmptyID": "14",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "A mid-rise public school with concrete construction serves southern residential communities. Energy-efficient design reduces operational costs while supporting educational needs. Centralized location minimizes student transportation, aligning with low-carbon goals. The public function and material choice meet zoning and sustainability requirements."
+  },
+  {
+    "EmptyID": "15",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "This central lot features mid-rise residential apartments using energy-efficient concrete. Proximity to commercial services enables walkable living, reducing carbon emissions. The design supports mixed-use zoning through housing integration while concrete materials prioritize low-carbon performance and sustainable community development."
+  },
+  {
+    "EmptyID": "16",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Mid-rise housing with concrete construction provides sustainable living in this southwestern location. Energy-efficient design reduces carbon footprint while complementing nearby commercial services. The residential function supports mixed-use objectives, creating balanced neighborhoods with minimized transportation needs and low environmental impact."
+  },
+  {
+    "EmptyID": "17",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Low-rise commercial facilities with concrete materials offer energy-efficient services in this central-south lot. Positioned near residential areas, they enable convenient access to amenities, reducing travel emissions. The design uses sustainable materials to align with low-carbon priorities while fulfilling mixed-use zoning requirements."
+  },
+  {
+    "EmptyID": "18",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 65,
+    "Summary": "This central lot hosts a high-rise commercial complex with concrete for balanced energy performance. Its downtown location maximizes accessibility, reducing transportation needs. The design provides office/retail spaces that integrate with residential zones, meeting mixed-use goals while concrete materials moderate carbon footprint."
+  },
+  {
+    "EmptyID": "19",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "A mid-rise community center with concrete construction serves central districts with public amenities. Energy-efficient design reduces operational emissions while supporting social needs. Strategic location minimizes travel distances, aligning with low-carbon goals. The public function complements mixed-use zoning through accessible services."
+  },
+  {
+    "EmptyID": "20",
+    "Function": "1",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 50,
+    "Summary": "High-rise residential apartments with concrete materials provide dense housing near the city core. Despite height, energy efficiency is maintained through sustainable construction. The location enables walkable access to services, reducing carbon emissions. This design balances mixed-use requirements with low-carbon living priorities."
+  },
+  {
+    "EmptyID": "21",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 65,
+    "Summary": "Positioned centrally, this high-rise commercial tower uses concrete for energy-efficient office/retail spaces. Its downtown location promotes walkability and reduces transportation impacts. The design supports mixed-use zoning by integrating with residential areas while moderate-height construction and materials minimize carbon footprint."
+  },
+  {
+    "EmptyID": "22",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Low-rise neighborhood shops with concrete construction offer energy-efficient services in this northern lot. Proximity to residential areas enables convenient access, supporting 15-minute community principles. The commercial function and sustainable materials align with mixed-use and low-carbon goals through localized amenities."
+  },
+  {
+    "EmptyID": "23",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Designed as low-rise commercial spaces with concrete, this lot provides local retail services with minimal energy use. Integrated within residential zones, it reduces travel needs and carbon emissions. The sustainable materials and scale prioritize efficiency while meeting mixed-use zoning requirements."
+  },
+  {
+    "EmptyID": "24",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "This lot houses a mid-rise public library with concrete construction for community education. Energy-efficient design reduces operational emissions while central location minimizes transportation impacts. Serving cultural and educational needs, it complements mixed-use areas and adheres to low-carbon material priorities."
+  },
+  {
+    "EmptyID": "25",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Mid-rise residential apartments with concrete materials create sustainable housing in the southeast. Energy-efficient construction reduces carbon footprint while proximity to commercial services supports walkable living. The design fulfills mixed-use zoning by integrating housing with local amenities for balanced community development."
+  },
+  {
+    "EmptyID": "26",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Low-rise commercial facilities with concrete offer energy-efficient services in this eastern lot. Positioned near residential clusters, they provide daily amenities within short distances, reducing transportation emissions. The design uses sustainable materials to align with low-carbon priorities while supporting mixed-use objectives."
+  },
+  {
+    "EmptyID": "27",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 65,
+    "Summary": "This central-east lot hosts a high-rise commercial complex with concrete for balanced energy performance. Downtown location enhances accessibility, minimizing travel needs. The design provides office/retail spaces that integrate with residential zones, meeting mixed-use goals while concrete materials moderate carbon emissions."
+  },
+  {
+    "EmptyID": "28",
+    "Function": "1",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 50,
+    "Summary": "High-rise residential apartments with concrete construction offer dense housing near the city core. Energy efficiency is maintained through sustainable materials despite height. Walkable access to services reduces transportation emissions, supporting low-carbon living. This design balances mixed-use zoning with environmental priorities."
+  },
+  {
+    "EmptyID": "29",
+    "Function": "4",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 78,
+    "Summary": "As an extra-large lot, this high-rise cultural center with glass curtain wall serves as an eastern landmark. Sustainable technologies mitigate energy use while providing museums/performance spaces. It enriches community life, fulfilling mixed-use entertainment needs within regulatory constraints through iconic but controlled design."
+  },
+  {
+    "EmptyID": "30",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "A mid-rise public hospital with concrete construction provides healthcare in the southeast. Energy-efficient design reduces operational emissions while serving residential-commercial areas. Strategic location ensures accessibility with minimal travel, aligning with low-carbon goals. The facility supports mixed-use communities through essential services and sustainable materials."
+  },
+  {
+    "EmptyID": "31",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Mid-rise residential apartments with concrete materials offer sustainable housing in this eastern location. Energy-efficient construction minimizes carbon footprint while integration with commercial services supports walkable living. The design fulfills mixed-use zoning requirements and low-carbon priorities through material choice and community-focused planning."
+  },
+  {
+    "EmptyID": "32",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 65,
+    "Summary": "This northern lot features a high-rise commercial complex with concrete for balanced energy use. Positioned near cultural facilities, it provides office/retail spaces that enhance district vitality. The design supports mixed-use goals through integration with residential areas while concrete materials reduce environmental impact."
+  },
+  {
+    "EmptyID": "33",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Low-rise commercial spaces with concrete construction provide energy-efficient neighborhood services. Integrated near residential and cultural zones, they enable convenient access to amenities, reducing travel needs. The sustainable design aligns with low-carbon priorities while fulfilling mixed-use requirements through localized retail offerings."
+  },
+  {
+    "EmptyID": "34",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Designed as low-rise shops with concrete, this lot offers efficient commercial services in the northeast. Proximity to housing supports walkable communities, minimizing transportation emissions. The small scale and sustainable materials prioritize energy performance while contributing to mixed-use zoning objectives."
+  },
+  {
+    "EmptyID": "35",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Mid-rise residential buildings with concrete materials create sustainable housing in this northern lot. Energy-efficient design reduces carbon footprint while complementing adjacent commercial/cultural facilities. The residential function supports mixed-use goals by providing balanced communities with low environmental impact and walkable amenities."
+  },
+  {
+    "EmptyID": "36",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "This southeastern lot features low-rise commercial facilities with concrete for energy efficiency. Positioned near residential zones, it provides local services that reduce travel demands. The sustainable materials and scale align with low-carbon priorities while supporting mixed-use community development through accessible amenities."
+  },
+  {
+    "EmptyID": "37",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Low-rise neighborhood shops with concrete construction offer efficient commercial services. Integrated within residential areas, they enable walkable access to daily needs, minimizing carbon emissions. The design uses sustainable materials to meet low-carbon goals while fulfilling mixed-use zoning requirements in the southeast."
+  },
+  {
+    "EmptyID": "38",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Mid-rise residential apartments with concrete materials provide sustainable housing in this eastern location. Energy-efficient design reduces environmental impact while proximity to commercial services supports 15-minute living principles. The development balances mixed-use requirements with low-carbon priorities through material choice and community integration."
+  },
+  {
+    "EmptyID": "39",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Concrete mid-rise residential buildings create energy-efficient housing near transport corridors. The design minimizes carbon footprint through sustainable materials while integrating with commercial zones for complete neighborhoods. This lot supports mixed-use objectives by reducing travel needs and promoting low-carbon living in the district."
+  },
+  {
+    "EmptyID": "40",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 65,
+    "Summary": "This large eastern lot hosts a high-rise commercial complex with concrete for balanced energy performance. Strategic location near residential areas provides accessible office/retail spaces. The design supports mixed-use zoning while concrete materials moderate environmental impact, aligning with low-carbon development priorities despite scale."
+  },
+  {
+    "EmptyID": "41",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "A mid-rise public school with concrete construction serves eastern communities. Energy-efficient design reduces operational emissions while supporting educational needs. Centralized within residential areas, it minimizes student transportation, aligning with low-carbon goals. The facility enhances mixed-use districts through sustainable community services."
+  },
+  {
+    "EmptyID": "42",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Mid-rise residential apartments with concrete materials offer sustainable housing in the southeast. Energy-efficient construction minimizes carbon footprint while integration with commercial services enables walkable living. The design fulfills mixed-use zoning and low-carbon priorities through community-focused planning and material selection."
+  },
+  {
+    "EmptyID": "43",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 65,
+    "Summary": "Positioned along major routes, this high-rise commercial complex uses concrete for energy-efficient offices/retail. Its scale supports urban density while reducing per-capita emissions through shared infrastructure. The design integrates with residential areas, meeting mixed-use goals with moderated environmental impact via sustainable materials."
+  }
+]
