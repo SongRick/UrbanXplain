@@ -39,6 +39,8 @@ namespace UrbanXplain
 
         void Update()
         {
+            if (Time.timeScale == 0f)
+                return;
             // Only process movement and camera controls if allowed.
             if (allowMovement)
             {
