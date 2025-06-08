@@ -1,14 +1,13 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UI; // **新增**: 为了引用Button组件
 using UnityEngine.EventSystems;
 using TMPro;
 using DG.Tweening;
-using System; // **新增**: 为了使用 Action 事件
+using System;
 
 public class InstructionInputController : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
     // ---- 事件 ----
-    // **新增**: 当指令被提交时触发的事件。外部脚本可以订阅这个事件。
     public event Action<string> OnInstructionSubmitted;
 
     // ---- UI 引用 ----
@@ -18,16 +17,12 @@ public class InstructionInputController : MonoBehaviour, ISelectHandler, IDesele
     [SerializeField] private Image underlineImage;
     [SerializeField] private RectTransform executeButtonIcon;
     [SerializeField] private Image containerBorder;
-    // **新增**: 直接引用按钮的Image组件来控制颜色
-    [SerializeField] private Image executeButtonImage;
+    // **修改1: 将Image引用改为Button引用**
+    [SerializeField] private Button executeButton;
     private TextMeshProUGUI placeholderText;
 
     // ---- 配置 ----
-    [Header("Color Settings")]
-    [SerializeField] private Color defaultColor = new Color(0.62f, 0.65f, 0.72f);
-    [SerializeField] private Color highlightColor = new Color(0, 0.75f, 1f);
-    [SerializeField] private Color submitFlashColor = new Color(0, 0.75f, 1f);
-
+    // **修改2: 移除了脚本中的颜色变量**
     [Header("Text Settings")]
     [SerializeField] private string defaultPlaceholder = "Enter urban planning instructions...";
     [SerializeField] private string loadingPlaceholder = "Processing instruction...";
@@ -39,60 +34,54 @@ public class InstructionInputController : MonoBehaviour, ISelectHandler, IDesele
     // ---- 内部状态 ----
     private Sequence promptPulseSequence;
     private Vector3 executeButtonInitialPos;
-    private bool isLocked = false; // **新增**: 标记输入框是否因加载而被锁定
+    private bool isLocked = false;
 
     private void Awake()
     {
         if (inputField == null) inputField = GetComponent<TMP_InputField>();
 
-        // **新增**: 获取Placeholder组件
         placeholderText = inputField.placeholder as TextMeshProUGUI;
         placeholderText.text = defaultPlaceholder;
 
         if (executeButtonIcon != null) executeButtonInitialPos = executeButtonIcon.localPosition;
         if (containerBorder != null) containerBorder.color = Color.clear;
 
-        // **新增**: 监听输入框文本变化事件，用于更新按钮状态
         inputField.onValueChanged.AddListener(OnInputTextChanged);
-        // 监听提交事件
         inputField.onEndEdit.AddListener(OnInputSubmit);
+
+        // **新增**: 如果按钮被点击，也触发提交逻辑
+        if (executeButton != null)
+        {
+            executeButton.onClick.AddListener(SubmitInstruction);
+        }
     }
 
     private void Start()
     {
         SetDeselectedState();
-        UpdateExecuteButtonState(); // 初始化按钮状态
+        UpdateExecuteButtonState();
     }
 
-    // ---- 公共方法：由外部逻辑控制器调用 ----
-    /// <summary>
-    /// 设置输入框的加载状态 (由外部逻辑控制器调用)
-    /// </summary>
-    /// <param name="isProcessing">是否正在处理指令</param>
+    // ---- 公共方法 ----
     public void SetProcessingState(bool isProcessing)
     {
         isLocked = isProcessing;
         inputField.interactable = !isProcessing;
 
-        if (isProcessing)
+        placeholderText.text = isProcessing ? loadingPlaceholder : defaultPlaceholder;
+
+        if (!isProcessing)
         {
-            placeholderText.text = loadingPlaceholder;
+            inputField.ActivateInputField();
         }
-        else
-        {
-            placeholderText.text = defaultPlaceholder;
-            inputField.ActivateInputField(); // 处理完成后自动聚焦
-        }
-        UpdateExecuteButtonState(); // 更新按钮状态
+
+        UpdateExecuteButtonState();
     }
 
     // ---- 事件回调 ----
     private void OnInputTextChanged(string text)
     {
-        if (!isLocked) // 如果不在加载中，才更新按钮状态
-        {
-            UpdateExecuteButtonState();
-        }
+        UpdateExecuteButtonState();
     }
 
     private void OnInputSubmit(string text)
@@ -103,63 +92,59 @@ public class InstructionInputController : MonoBehaviour, ISelectHandler, IDesele
         }
     }
 
-    // ---- 内部逻辑 ----
+    // ---- 内部核心逻辑 ----
     private void UpdateExecuteButtonState()
     {
-        if (executeButtonImage == null) return;
+        if (executeButton == null) return;
 
-        // 核心逻辑: 当输入框可交互(未锁定)、被聚焦、且内容不为空时，按钮高亮
-        bool shouldHighlight = inputField.interactable && inputField.isFocused && !string.IsNullOrEmpty(inputField.text);
+        // **修改3: 核心逻辑更新 - 只控制interactable属性**
+        // 按钮可交互的条件：未被锁定 且 ( (聚焦 且 有文本) 或 (不聚焦 但 有文本) ) -> 简化为：未被锁定 且 有文本
+        bool canSubmit = !isLocked && !string.IsNullOrEmpty(inputField.text);
 
-        executeButtonImage.DOColor(shouldHighlight ? highlightColor : defaultColor, transitionDuration);
+        executeButton.interactable = canSubmit;
     }
 
     public void SubmitInstruction()
     {
-        if (isLocked || string.IsNullOrWhiteSpace(inputField.text)) return;
+        // 现在由Button的interactable状态和这里的isLocked共同决定是否能提交
+        if (!executeButton.interactable || isLocked) return;
 
         string instructionText = inputField.text;
-
-        // --- 触发事件，通知外部监听者 ---
         OnInstructionSubmitted?.Invoke(instructionText);
-
-        // --- 播放动画 ---
         PlaySubmitAnimations();
-
-        inputField.text = ""; // 清空输入框
+        inputField.text = "";
     }
 
     // ---- 视觉状态和动画 ----
     public void OnSelect(BaseEventData eventData)
     {
         if (isLocked) return;
-
         if (promptPulseSequence != null && promptPulseSequence.IsActive()) promptPulseSequence.Kill();
 
-        promptIndicator.color = highlightColor;
-        underlineImage.DOColor(highlightColor, transitionDuration);
+        // **修改4: 聚焦时只改变下划线和提示符，按钮状态由UpdateExecuteButtonState管理**
+        promptIndicator.color = new Color(0, 0.75f, 1f); // 直接使用颜色值
+        underlineImage.DOColor(new Color(0, 0.75f, 1f), transitionDuration);
         underlineImage.rectTransform.DOScaleY(2f, transitionDuration);
 
-        UpdateExecuteButtonState(); // 聚焦时更新按钮状态
+        UpdateExecuteButtonState();
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
         if (isLocked) return;
-
         SetDeselectedState();
-        UpdateExecuteButtonState(); // 失焦时更新按钮状态
+        UpdateExecuteButtonState();
     }
 
     private void SetDeselectedState()
     {
-        underlineImage.DOColor(defaultColor, transitionDuration);
+        underlineImage.DOColor(new Color(0.62f, 0.65f, 0.72f), transitionDuration);
         underlineImage.rectTransform.DOScaleY(1f, transitionDuration);
 
         if (promptPulseSequence != null) promptPulseSequence.Kill();
         promptPulseSequence = DOTween.Sequence();
-        promptPulseSequence.Append(promptIndicator.DOColor(defaultColor, 1.5f))
-                         .Append(promptIndicator.DOColor(highlightColor, 1.5f))
+        promptPulseSequence.Append(promptIndicator.DOColor(new Color(0.62f, 0.65f, 0.72f), 1.5f))
+                         .Append(promptIndicator.DOColor(new Color(0, 0.75f, 1f), 1.5f))
                          .SetLoops(-1, LoopType.Yoyo);
     }
 
@@ -176,7 +161,7 @@ public class InstructionInputController : MonoBehaviour, ISelectHandler, IDesele
         {
             DOTween.Kill(containerBorder);
             DOTween.Sequence()
-                .Append(containerBorder.DOColor(submitFlashColor, submitAnimDuration / 2))
+                .Append(containerBorder.DOColor(new Color(0, 0.75f, 1f), submitAnimDuration / 2))
                 .Append(containerBorder.DOColor(Color.clear, submitAnimDuration / 2));
         }
     }
@@ -185,11 +170,14 @@ public class InstructionInputController : MonoBehaviour, ISelectHandler, IDesele
     {
         if (promptPulseSequence != null) promptPulseSequence.Kill();
 
-        // 移除所有监听器
         if (inputField != null)
         {
             inputField.onValueChanged.RemoveListener(OnInputTextChanged);
             inputField.onEndEdit.RemoveListener(OnInputSubmit);
+        }
+        if (executeButton != null)
+        {
+            executeButton.onClick.RemoveListener(SubmitInstruction);
         }
     }
 }
