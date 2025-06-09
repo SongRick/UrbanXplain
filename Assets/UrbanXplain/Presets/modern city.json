@@ -1,0 +1,346 @@
+[
+  {
+    "EmptyID": "1",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 80,
+    "Summary": "Positioned at the southwest entrance, this high-rise glass commercial complex serves as a gateway landmark, boosting regional economic activity. Its height and material align with modern urban aesthetics while meeting commercial zoning needs through high-visibility retail and office spaces that activate the street frontage."
+  },
+  {
+    "EmptyID": "2",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "This low-rise concrete commercial building provides neighborhood services like cafes and convenience stores. Its efficient design supports the 15-minute city concept while the modest scale creates human-scaled streetscapes. Concrete material ensures thermal efficiency in this transitional zone between residential and commercial areas."
+  },
+  {
+    "EmptyID": "3",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "As a mid-rise public service hub in the northwest, this concrete building houses community clinics and administrative offices. The design prioritizes accessibility with moderate height, serving surrounding neighborhoods efficiently. Concrete construction balances durability with energy conservation in this high-usage facility."
+  },
+  {
+    "EmptyID": "4",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "This mid-rise concrete residential complex offers family-oriented housing in the southwest quadrant. Its human-scale design creates neighborhood cohesion while concrete materials ensure energy efficiency. Positioned away from major corridors, it provides tranquil living spaces that complement adjacent commercial zones."
+  },
+  {
+    "EmptyID": "5",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Mirroring adjacent development, this mid-rise concrete residential block establishes neighborhood continuity in the southwest. The design promotes community interaction through shared green spaces while concrete construction minimizes energy consumption. Its location creates a buffer between commercial corridors and quiet living areas."
+  },
+  {
+    "EmptyID": "6",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "As a low-rise concrete commercial outpost, this building hosts local entrepreneurs like bakeries and boutiques. Its scale activates street life without overwhelming the residential context. Energy-efficient concrete construction supports sustainable operations while serving immediate neighborhood needs."
+  },
+  {
+    "EmptyID": "7",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Complementing nearby commercial nodes, this low-rise concrete structure provides essential services to southwest residents. Its compact form enables quick construction while minimizing energy use. The design fosters walkable commerce that integrates seamlessly with surrounding residential developments."
+  },
+  {
+    "EmptyID": "8",
+    "Function": "4",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 85,
+    "Summary": "This central extra-large lot hosts a high-rise cultural complex with glass facade, creating an iconic arts and performance destination. The transparent design symbolizes civic pride while accommodating theaters and galleries. As required for 172x172 lots, it uses high-rise glass construction to maximize cultural impact citywide."
+  },
+  {
+    "EmptyID": "9",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 80,
+    "Summary": "Positioned along a major northwest artery, this high-rise glass office tower concentrates commercial activity. Its height creates a business district anchor while glass curtain walls reflect modern corporate identity. Proximity to transit supports workforce mobility, fulfilling commercial zoning goals with high-density efficiency."
+  },
+  {
+    "EmptyID": "10",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "This low-rise concrete commercial pad serves as a neighborhood services hub, hosting banks and pharmacies. Its modest scale complements nearby high-rises while concrete construction ensures energy efficiency. The location bridges residential and commercial zones, activating pedestrian pathways."
+  },
+  {
+    "EmptyID": "11",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "Designed as a mid-rise concrete education center, this facility houses vocational training programs. The moderate height allows flexible classroom layouts while concrete materials ensure acoustic separation and energy conservation. Its location supports northwest residential clusters with accessible skill-development resources."
+  },
+  {
+    "EmptyID": "12",
+    "Function": "3",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 75,
+    "Summary": "As a high-rise glass medical complex in the northwest, this facility centralizes specialized healthcare services. Glass elements maximize natural light for healing environments while the vertical design accommodates advanced equipment. The location ensures citywide accessibility, fulfilling public health infrastructure requirements."
+  },
+  {
+    "EmptyID": "13",
+    "Function": "1",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "This high-rise concrete residential tower in the northwest offers urban living with panoramic views. Its height optimizes land use in a growing sector while concrete construction ensures fire safety and noise reduction. Balconies and shared amenities create community within a dense architectural form."
+  },
+  {
+    "EmptyID": "14",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 35,
+    "Summary": "Serving the southwest's educational needs, this mid-rise concrete school complex features adaptable learning pods. The design prioritizes safety with clear sightlines and durable materials. Concrete construction provides thermal mass for energy efficiency while creating a civic landmark for the community."
+  },
+  {
+    "EmptyID": "15",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 80,
+    "Summary": "This high-rise glass commercial hub along a central corridor combines retail, dining, and co-working spaces. Its transparent facade activates street engagement while vertical stacking maximizes prime location value. The design creates a daytime activity node that complements nearby cultural facilities."
+  },
+  {
+    "EmptyID": "16",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "As a mid-rise concrete residential enclave in the south, this development offers family-centric units with communal courtyards. The human scale fosters neighborly interaction while concrete materials ensure longevity and energy efficiency. Positioned near green spaces, it promotes healthy suburban-style living within urban density."
+  },
+  {
+    "EmptyID": "17",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Complementing adjacent residential blocks, this mid-rise concrete building provides affordable housing options. Its design incorporates universal accessibility features while shared laundry and recreation facilities build community. Concrete construction minimizes operational costs, supporting sustainable neighborhood development."
+  },
+  {
+    "EmptyID": "18",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 45,
+    "Summary": "Strategically located south of downtown, this mid-rise concrete civic center consolidates government services. The design features public plazas and transparent ground floors to encourage community engagement. Concrete materials provide security and energy efficiency for high-traffic public facilities."
+  },
+  {
+    "EmptyID": "19",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 45,
+    "Summary": "As a mid-rise concrete community hub near the city core, this facility offers multipurpose halls and childcare services. Its central location ensures equitable access while moderate height maintains streetscape harmony. Energy-efficient concrete construction supports extended operating hours for neighborhood programs."
+  },
+  {
+    "EmptyID": "20",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 75,
+    "Summary": "This high-rise glass hotel anchors the northern downtown edge, catering to business and cultural district visitors. Glass curtain walls create luminous guest experiences while upper-floor restaurants capitalize on city views. The design activates the streetscape with lobby retail and conference facilities."
+  },
+  {
+    "EmptyID": "21",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 80,
+    "Summary": "Dominating the northern skyline, this high-rise glass commercial tower concentrates corporate headquarters and premium offices. Its reflective facade symbolizes economic vitality while creating distinctive architecture. Proximity to cultural facilities supports executive entertainment needs within a walkable business ecosystem."
+  },
+  {
+    "EmptyID": "22",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "As a mid-rise concrete innovation lab north of downtown, this facility bridges academia and industry. Flexible labs and collaboration spaces accommodate research teams while concrete construction ensures vibration control for sensitive equipment. The location fosters partnerships with nearby commercial tenants."
+  },
+  {
+    "EmptyID": "23",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "This mid-rise concrete library serves as a northern downtown knowledge hub, featuring digital media labs and reading gardens. The design prioritizes natural light through strategic fenestration while concrete materials provide acoustic separation. Central location ensures accessibility for diverse user groups."
+  },
+  {
+    "EmptyID": "24",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "Nestled in the northwest, this low-rise concrete commercial pavilion hosts artisanal workshops and cafes. Its intimate scale creates a pedestrian-friendly destination while green roofs enhance sustainability. Concrete construction ensures energy efficiency for small businesses serving local creative communities."
+  },
+  {
+    "EmptyID": "25",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "This mid-rise concrete residential complex in the southeast establishes a neighborhood identity through shared courtyards. The design incorporates cross-ventilation for natural cooling while concrete materials provide noise insulation from adjacent corridors. Affordable unit mix supports diverse community development."
+  },
+  {
+    "EmptyID": "26",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Complementing southeast housing stock, this mid-rise concrete building offers senior-friendly units with accessibility features. Community rooms on each floor foster social connections while concrete construction ensures fire safety and energy efficiency. Proximity to transit supports aging-in-place objectives."
+  },
+  {
+    "EmptyID": "27",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 45,
+    "Summary": "Serving the southeast quadrant, this mid-rise concrete community center features gymnasiums and event spaces. The design incorporates solar shading devices on concrete facades to reduce cooling loads. Central location within residential clusters ensures walkable access to recreational and social programs."
+  },
+  {
+    "EmptyID": "28",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 75,
+    "Summary": "This high-rise glass mixed-use tower south of downtown combines luxury apartments with premium retail. Glass curtain walls maximize city views for residents while activating streetscapes with boutique storefronts. The vertical village concept supports live-work-play lifestyles in a transit-accessible location."
+  },
+  {
+    "EmptyID": "29",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 90,
+    "Summary": "As an extra-large lot in the northeast, this high-rise glass megamall creates a regional shopping destination. Multiple atriums and escalators facilitate customer flow while glass facades showcase retail offerings. Complies with 172x172 lot requirements through vertical commercial development with high energy impact."
+  },
+  {
+    "EmptyID": "30",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 35,
+    "Summary": "This mid-rise concrete technical institute in the southeast provides workforce training aligned with industrial corridors. Specialized labs accommodate vocational programs while concrete construction ensures durability for high-equipment spaces. Location near employment zones facilitates industry partnerships and student placements."
+  },
+  {
+    "EmptyID": "31",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 80,
+    "Summary": "Spanning the eastern gateway, this high-rise glass commercial complex houses export offices and logistics firms. Reflective glazing reduces solar gain while creating a distinctive corporate identity. The design capitalizes on highway visibility to attract multinational tenants seeking prominent headquarters locations."
+  },
+  {
+    "EmptyID": "32",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 80,
+    "Summary": "As a high-rise glass business hub in the northeast, this tower accommodates fintech startups and venture firms. Communal innovation floors encourage collaboration while glass facades symbolize transparency. Proximity to the shopping mall creates synergistic professional services and retail ecosystems."
+  },
+  {
+    "EmptyID": "33",
+    "Function": "3",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "This mid-rise concrete childcare center serves northeast residential towers, featuring secure outdoor play decks. The design incorporates colorful precast concrete panels for child-friendly aesthetics while ensuring structural safety. Central location within housing clusters supports working families with extended-hour services."
+  },
+  {
+    "EmptyID": "34",
+    "Function": "2",
+    "FloorType": "1",
+    "Material": "2",
+    "EnergyConsumption": 25,
+    "Summary": "As a low-rise concrete neighborhood retail cluster, this development hosts daily-needs merchants like grocers and pharmacies. Canopy walkways connect to adjacent residential towers while concrete construction ensures cost-effective operations. The design activates ground planes with alfresco dining and pocket plazas."
+  },
+  {
+    "EmptyID": "35",
+    "Function": "1",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "This high-rise concrete residential tower in the northeast offers compact urban living near employment hubs. Sky gardens every ten floors provide communal green space while concrete materials ensure acoustic privacy. The design maximizes housing density without super high-rise construction per residential constraints."
+  },
+  {
+    "EmptyID": "36",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Positioned along eastern transit corridors, this mid-rise concrete apartment block features mobility-oriented design with bike hubs and car-share facilities. Concrete construction provides thermal mass for energy efficiency while communal rooftops foster neighbor interaction. Unit mix attracts transit-dependent residents."
+  },
+  {
+    "EmptyID": "37",
+    "Function": "1",
+    "FloorType": "2",
+    "Material": "2",
+    "EnergyConsumption": 30,
+    "Summary": "Complementing eastern housing stock, this mid-rise concrete residential building incorporates live-work units for artisans. Flexible ground-floor spaces accommodate home businesses while concrete party walls ensure acoustic separation. The design supports emerging creative economies within neighborhood contexts."
+  },
+  {
+    "EmptyID": "38",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 80,
+    "Summary": "This high-rise glass office tower along an eastern boulevard creates a commercial landmark with premium corporate suites. Double-skin glass facades optimize natural light while reducing HVAC loads. The location between residential and industrial zones positions it as a professional services bridge."
+  },
+  {
+    "EmptyID": "39",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 80,
+    "Summary": "Mirroring adjacent commercial development, this high-rise glass tower hosts international conference facilities and boutique hotels. Sky bridges connect to neighboring offices while glass curtain walls showcase panoramic city views. The design establishes an eastern commercial cluster with synergistic tenant relationships."
+  },
+  {
+    "EmptyID": "40",
+    "Function": "1",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "As a high-rise concrete residential tower in the northeast, this development offers luxury apartments with concierge services. Amenity decks include pools and co-working spaces while concrete construction ensures premium acoustic performance. The location balances accessibility to commercial hubs with residential tranquility."
+  },
+  {
+    "EmptyID": "41",
+    "Function": "1",
+    "FloorType": "3",
+    "Material": "2",
+    "EnergyConsumption": 40,
+    "Summary": "Completing the northeast residential precinct, this high-rise concrete tower features intergenerational units with flexible floorplans. Sky lounges on setback levels create community nodes while concrete materials provide fire safety. The design achieves density without super high-rise construction per zoning constraints."
+  },
+  {
+    "EmptyID": "42",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 80,
+    "Summary": "This high-rise glass logistics hub near eastern highways consolidates warehouse automation firms and freight brokers. Glazed showrooms display equipment while upper floors house dispatch centers. The design leverages highway visibility for trade-oriented tenants, creating an efficient goods-movement node."
+  },
+  {
+    "EmptyID": "43",
+    "Function": "2",
+    "FloorType": "3",
+    "Material": "1",
+    "EnergyConsumption": 80,
+    "Summary": "Anchoring the northeast gateway, this high-rise glass mixed-use development combines showroom retail with hospitality services. Angled glass facades create dynamic reflections while accommodating diverse tenant layouts. The design establishes a memorable arrival sequence that embodies modern urban commercial vitality."
+  }
+]
