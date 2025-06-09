@@ -60,7 +60,7 @@ namespace UrbanXplain
             }
 
             // Check for input to toggle the function-based color view.
-            if (Input.GetKeyDown(highlightKeyByFunction))
+            if (InputManager.GetGameKeyDown(highlightKeyByFunction))
             {
                 if (uIControl.IsInputMode())
                     return;
@@ -68,7 +68,7 @@ namespace UrbanXplain
             }
 
             // Check for input to toggle the energy-based color view.
-            if (Input.GetKeyDown(highlightKeyByEnergy))
+            if (InputManager.GetGameKeyDown(highlightKeyByEnergy))
             {
                 if (uIControl.IsInputMode())
                     return;

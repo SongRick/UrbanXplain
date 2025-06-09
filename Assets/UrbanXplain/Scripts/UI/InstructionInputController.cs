@@ -170,7 +170,7 @@ public class InstructionInputController : MonoBehaviour, ISelectHandler, IDesele
 
     private void OnInputSubmit(string text)
     {
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) SubmitInstruction();
+        if (InputManager.GetGameKeyDown(KeyCode.Return) || InputManager.GetGameKeyDown(KeyCode.KeypadEnter)) SubmitInstruction();
     }
 
     private void UpdateExecuteButtonState()

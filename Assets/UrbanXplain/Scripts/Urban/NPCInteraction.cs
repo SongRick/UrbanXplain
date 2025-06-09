@@ -125,7 +125,7 @@ namespace UrbanXplain
 
         void Update()
         {
-            if (isTyping && Input.GetMouseButtonDown(0))
+            if (isTyping && InputManager.GetGameMouseButtonDown(0))
             {
                 SkipTypingEffect();
             }

@@ -52,7 +52,7 @@ namespace UrbanXplain
 
         void Update()
         {
-            if (Input.GetMouseButtonDown(0)) // 检测鼠标左键点击
+            if (InputManager.GetGameMouseButtonDown(0)) // 检测鼠标左键点击
             {
                 // Debug.Log("BuildingClickHandler: Mouse button 0 (left-click) detected.");
 

@@ -1,70 +1,64 @@
+// --- START OF FILE: PauseMenuController.cs (修改后) ---
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro; // 如果你用的是TextMeshPro的InputField
 
 public class PauseMenuController : MonoBehaviour
 {
-    public GameObject pauseMenuPanel; // 在Inspector中指定你的暂停菜单Panel
-    public InputField commandInputField; // 在Inspector中指定你的城市规划指令输入框
+    public GameObject pauseMenuPanel;
+    public TMP_InputField commandInputField; // 强烈建议使用TextMeshPro的InputField
 
-    private bool isPaused = false;
-    private void Start()
+    private bool isMenuVisible = false;
+
+    void Start()
     {
-        TogglePauseMenu();
+        // 初始时菜单应该是关闭的
+        pauseMenuPanel.SetActive(true);
+        isMenuVisible = true;
+        InputManager.SetState(InputState.UIOnly); // 确保初始状态正确
+        Time.timeScale = 0f;
     }
 
     void Update()
     {
-        // 检测P键按下
+        // P键的检测现在不受InputManager状态的影响，因为它本身就是UI控制键
         if (Input.GetKeyDown(KeyCode.P))
         {
-            // 检查指令输入框是否被选中且正在输入
+            // 如果输入框正在输入，P键是打字，不触发菜单
             if (commandInputField != null && commandInputField.isFocused)
             {
-                // 如果输入框是聚焦状态，则P键是输入内容，不打开暂停菜单
-                // InputField/TMP_InputField组件会自动处理字符'P'的输入
-                // 所以这里我们什么都不做，或者可以加个Debug.Log("P pressed while input field focused");
                 return;
             }
 
-            // 如果输入框未聚焦，则切换暂停菜单的显示状态
-            TogglePauseMenu();
+            ToggleControlsMenu();
         }
     }
 
-    public void TogglePauseMenu()
+    public void ToggleControlsMenu()
     {
-        isPaused = !isPaused;
+        isMenuVisible = !isMenuVisible;
+        pauseMenuPanel.SetActive(isMenuVisible);
 
-        if (pauseMenuPanel != null)
+        if (isMenuVisible)
         {
-            pauseMenuPanel.SetActive(isPaused);
-        }
-
-        // 暂停/恢复游戏时间 (根据你的游戏需求决定是否需要)
-        if (isPaused)
-        {
-            Time.timeScale = 0f; // 游戏暂停
-            // 可以考虑在这里解锁并显示鼠标光标，如果你的游玩模式锁定了光标
-            // Cursor.lockState = CursorLockMode.None;
-            // Cursor.visible = true;
+            // 打开菜单：切换到UIOnly模式，暂停时间
+            InputManager.SetState(InputState.UIOnly);
+            Time.timeScale = 0f;
         }
         else
         {
-            Time.timeScale = 1f; // 游戏恢复
-            // 如果游玩模式锁定了光标，在这里恢复锁定状态
-            // if (currentMode == PlayMode) { // 假设你有模式状态变量
-            //    Cursor.lockState = CursorLockMode.Locked;
-            //    Cursor.visible = false;
-            // }
+            // 关闭菜单：恢复Gameplay模式，恢复时间
+            InputManager.SetState(InputState.Gameplay);
+            Time.timeScale = 1f;
         }
     }
 
-    // (可选) 如果暂停菜单上有"继续游戏"按钮，可以调用这个
+    // 提供给菜单上的"关闭"或"继续"按钮调用
     public void ResumeGame()
     {
-        if (isPaused)
+        if (isMenuVisible)
         {
-            TogglePauseMenu();
+            ToggleControlsMenu();
         }
     }
 }
+// --- END OF FILE: PauseMenuController.cs (修改后) ---
