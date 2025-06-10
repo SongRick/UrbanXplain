@@ -143,8 +143,8 @@ namespace UrbanXplain
 
             // Serialize the request body to a JSON string.
             // 测试时可以使用deepseek-chat模型，正常应该用deepseek-reasoner模型
-            string jsonBody = JsonConvert.SerializeObject(requestBodyV3, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            Debug.Log("Request JSON Body: " + jsonBody); // Log the request body for debugging.
+            string jsonBody = JsonConvert.SerializeObject(requestBodyR1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            //Debug.Log("Request JSON Body: " + jsonBody); // Log the request body for debugging.
 
             // Create and send the UnityWebRequest.
             UnityWebRequest request = CreateWebRequest(jsonBody);

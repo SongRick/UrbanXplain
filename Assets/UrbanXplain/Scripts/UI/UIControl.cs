@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace UrbanXplain
 {
@@ -13,7 +14,6 @@ namespace UrbanXplain
         // Reference to the CanvasGroup component of the main UI panel to control its visibility and interactivity.
         public CanvasGroup canvasGroup;
         // Reference to the InfoPopupManager to hide popups when exiting input mode.
-        public InfoPopupManager infoPopupManager; // Assign in Inspector.
 
         private void Start()
         {
@@ -44,22 +44,25 @@ namespace UrbanXplain
         // This includes cursor lock, player movement, and UI visibility.
         private void UpdateModeState()
         {
-            if (isInputMode) // UI Input Mode
+            if (isInputMode)
             {
-                // Unlock the cursor to allow interaction with UI elements.
+                // Entering UI Input Mode
                 Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true; // Ensure cursor is visible.
+                Cursor.visible = true;
             }
-            else // Gameplay Mode (Non-Input Mode)
+            else
             {
-                // Lock the cursor to the center of the screen for first-person controls.
+                // Entering Gameplay Mode
                 Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false; // Hide cursor.
+                Cursor.visible = false;
 
-                // Hide any active information popups when returning to gameplay mode.
-                if (infoPopupManager != null)
+                // --- 核心修复 ---
+                // << 2. 强制取消UI元素的焦点 >>
+                // 当进入游玩模式时，告诉EventSystem取消对任何UI元素的选中状态，
+                // 这样输入框就会失去焦点，不再接收键盘输入。
+                if (EventSystem.current != null)
                 {
-                    infoPopupManager.HidePopup();
+                    EventSystem.current.SetSelectedGameObject(null);
                 }
             }
 
