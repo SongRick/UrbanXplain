@@ -124,7 +124,7 @@ namespace UrbanXplain
             // Create the request body object using the ChatRequest structure defined in this script.
             // This uses the top-level 'type' field for specifying JSON object response format,
             // as per the original script's structure.
-            ChatRequest requestBody = new ChatRequest
+            ChatRequest requestBodyR1 = new ChatRequest
             {
                 model = modelR1Name,
                 messages = messages,
@@ -133,7 +133,7 @@ namespace UrbanXplain
                 type = responseFormatType // Use the 'type' field directly for "json_object".
             };
             // 仅测试用，性能更差的deepseek-chat模型
-            ChatRequest requestChatBody = new ChatRequest
+            ChatRequest requestBodyV3 = new ChatRequest
             {
                 model = "deepseek-chat",
                 messages = messages,
@@ -143,7 +143,7 @@ namespace UrbanXplain
 
             // Serialize the request body to a JSON string.
             // 测试时可以使用deepseek-chat模型，正常应该用deepseek-reasoner模型
-            string jsonBody = JsonConvert.SerializeObject(requestBody, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            string jsonBody = JsonConvert.SerializeObject(requestBodyV3, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             Debug.Log("Request JSON Body: " + jsonBody); // Log the request body for debugging.
 
             // Create and send the UnityWebRequest.
