@@ -143,7 +143,7 @@ namespace UrbanXplain
 
             // Serialize the request body to a JSON string.
             // 测试时可以使用deepseek-chat模型，正常应该用deepseek-reasoner模型
-            string jsonBody = JsonConvert.SerializeObject(requestChatBody, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            string jsonBody = JsonConvert.SerializeObject(requestBody, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             Debug.Log("Request JSON Body: " + jsonBody); // Log the request body for debugging.
 
             // Create and send the UnityWebRequest.
@@ -279,8 +279,14 @@ namespace UrbanXplain
                     continue;
                 }
 
-                // Store the summary for the land plot using BuildingSpawnerJson.
-                buildingSpawnerJson.StoreLandSummary(landInfo.EmptyID, landInfo.Summary);
+                buildingSpawnerJson.StoreLandProperties(
+                    landInfo.EmptyID,
+                    landInfo.Function,
+                    landInfo.FloorType,
+                    landInfo.Material,
+                    landInfo.Summary
+                );
+
                 // Instruct BuildingSpawnerJson to spawn buildings on the plot based on its properties.
                 buildingSpawnerJson.SpawnBuilding(
                     landInfo.EmptyID,

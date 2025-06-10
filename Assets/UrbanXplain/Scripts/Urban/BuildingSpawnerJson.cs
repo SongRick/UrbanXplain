@@ -261,9 +261,10 @@ namespace UrbanXplain
                         T = int.Parse(values[headerMap["T"]].Trim('"')),
                         S = int.Parse(values[headerMap["S"]].Trim('"')),
                         BuildingUsageCount = new Dictionary<int, int>(),
+                        Function = "",
+                        FloorType = "",
+                        Material = "",
                         Summary = ""
-                        // 注意：您的 emptyland.csv 还有 "Name", "Height", "EndPosX", "EndPosY", "EndPosZ" 列
-                        // 如果需要这些数据，请在 EmptyLandData 结构体中添加相应字段，并在这里解析
                     };
                     emptyLandCache[data.ID] = data;
                 }
@@ -700,19 +701,22 @@ namespace UrbanXplain
                 }
             }
 
+            // --- MODIFIED: 重置所有缓存数据 ---
             List<int> keys = new List<int>(emptyLandCache.Keys);
-
             foreach (int key in keys)
             {
                 EmptyLandData landData = emptyLandCache[key];
                 landData.BuildingUsageCount.Clear();
                 landData.Summary = "";
+                landData.Function = "";
+                landData.FloorType = "";
+                landData.Material = "";
                 emptyLandCache[key] = landData;
             }
 
             usedSpecialBuildings.Clear();
             usedCulturalBuildings.Clear();
-            Debug.Log("All spawned buildings and plot summaries cleared. All building usage counts reset.");
+            Debug.Log("All spawned buildings and plot data cleared.");
         }
 
         private int GetUsageCount(EmptyLandData landData, int buildingId)
@@ -731,37 +735,40 @@ namespace UrbanXplain
                 landData.BuildingUsageCount[buildingId] = 1;
         }
 
-        public void StoreLandSummary(string emptyID, string summary)
+
+        
+        // --- NEW METHOD: 用于存储LLM返回的完整地块属性 ---
+        public void StoreLandProperties(string emptyID, string function, string floorType, string material, string summary)
         {
             if (!int.TryParse(emptyID, out int landId))
             {
-                Debug.LogError($"StoreLandSummary: Invalid land ID format: {emptyID}");
+                Debug.LogError($"StoreLandProperties: Invalid land ID format: {emptyID}");
                 return;
             }
 
             if (emptyLandCache.TryGetValue(landId, out EmptyLandData landData))
             {
-                EmptyLandData updatedLandData = landData;
-                updatedLandData.Summary = summary;
-                emptyLandCache[landId] = updatedLandData;
+                landData.Function = function;
+                landData.FloorType = floorType;
+                landData.Material = material;
+                landData.Summary = summary;
+                emptyLandCache[landId] = landData; // 因为是 struct，必须写回
             }
             else
             {
-                Debug.LogError($"StoreLandSummary: Land configuration not found for ID: {landId}. Cannot store summary.");
+                Debug.LogError($"StoreLandProperties: Land configuration not found for ID: {landId}.");
             }
         }
 
-        public string GetLandSummary(int landId)
+        // --- NEW METHOD: 用于获取地块的完整数据 ---
+        // 返回可空类型，以便调用者检查是否找到了数据
+        public EmptyLandData? GetLandData(int landId)
         {
             if (emptyLandCache.TryGetValue(landId, out EmptyLandData landData))
             {
-                if (!string.IsNullOrEmpty(landData.Summary))
-                    return landData.Summary;
-                else
-                    return "No design summary is available for this plot yet.";
+                return landData;
             }
-
-            return $"Information for land plot ID {landId} not found.";
+            return null; // 表示未找到
         }
 
         // 内部数据结构
@@ -790,13 +797,11 @@ namespace UrbanXplain
             public int T;
             public int S;
             public Dictionary<int, int> BuildingUsageCount;
-            public string Summary;
-            // 如果您需要CSV中的 "Name", "Height", "EndPosX", "EndPosY", "EndPosZ" 字段，请在这里添加
-            // public string Name;
-            // public float Height;
-            // public float EndPosX;
-            // public float EndPosY;
-            // public float EndPosZ;
+            // --- NEW FIELDS ---
+            public string Function;
+            public string FloorType;
+            public string Material;
+            public string Summary; // Rationale
         }
     }
 }

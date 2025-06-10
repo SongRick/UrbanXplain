@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 namespace UrbanXplain
@@ -41,6 +42,7 @@ namespace UrbanXplain
         public KeyCode highlightKeyByEnergy = KeyCode.Alpha2;
 
         public UIControl uIControl;
+        [SerializeField] private TMP_InputField inputField;
 
         void Start()
         {
@@ -62,17 +64,15 @@ namespace UrbanXplain
             // Check for input to toggle the function-based color view.
             if (InputManager.GetGameKeyDown(highlightKeyByFunction))
             {
-                if (uIControl.IsInputMode())
-                    return;
-                ToggleFunctionColorView();
+                if (!inputField.isFocused)
+                    ToggleFunctionColorView();
             }
 
             // Check for input to toggle the energy-based color view.
             if (InputManager.GetGameKeyDown(highlightKeyByEnergy))
             {
-                if (uIControl.IsInputMode())
-                    return;
-                ToggleEnergyColorView();
+                if (!inputField.isFocused)
+                    ToggleEnergyColorView();
             }
         }
 
