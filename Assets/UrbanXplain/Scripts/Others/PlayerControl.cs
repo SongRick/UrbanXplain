@@ -54,22 +54,22 @@ namespace UrbanXplain
         {
             // Get horizontal and vertical input axes (typically WASD or arrow keys).
             // Movement is relative to the player's current orientation (transform.right and transform.forward).
-            Vector3 moveDirection = (transform.right * InputManager.GetGameAxis("Horizontal")) + (transform.forward * Input.GetAxis("Vertical"));
+            Vector3 moveDirection = (transform.right * GlobalInputManager.GetGameAxis("Horizontal")) + (transform.forward * Input.GetAxis("Vertical"));
 
             // Handle vertical "flying" movement.
             float verticalInput = 0f;
-            if (InputManager.GetGameKey(KeyCode.E)) // Move up
+            if (GlobalInputManager.GetGameKey(KeyCode.E)) // Move up
             {
                 verticalInput = verticalSpeed;
             }
-            else if (InputManager.GetGameKey(KeyCode.Q)) // Move down
+            else if (GlobalInputManager.GetGameKey(KeyCode.Q)) // Move down
             {
                 verticalInput = -verticalSpeed;
             }
             moveDirection.y = verticalInput; // Apply vertical movement to the y-component.
 
             // Determine current speed: base speed or sprint speed.
-            float currentSpeed = InputManager.GetGameKey(KeyCode.LeftShift) ? speed * sprintMultiplier : speed;
+            float currentSpeed = GlobalInputManager.GetGameKey(KeyCode.LeftShift) ? speed * sprintMultiplier : speed;
 
             // Move the player using CharacterController.Move.
             // Vector3.ClampMagnitude ensures diagonal movement isn't faster.

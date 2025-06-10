@@ -33,7 +33,7 @@ namespace UrbanXplain
         void HandleModeToggleInput() // Renamed from ChangeMode for clarity.
         {
             // Toggle mode when Left Alt key is pressed.
-            if (InputManager.GetGameKeyDown(KeyCode.LeftAlt))
+            if (GlobalInputManager.GetGameKeyDown(KeyCode.LeftAlt))
             {
                 isInputMode = !isInputMode;
                 UpdateModeState(); // Apply changes based on the new mode.

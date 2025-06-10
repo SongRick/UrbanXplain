@@ -14,7 +14,7 @@ public enum InputState
 /// 一个静态的输入管理器，作为所有游戏性输入的唯一来源。
 /// 它根据当前的InputState来决定是否响应输入请求。
 /// </summary>
-public static class InputManager
+public static class GlobalInputManager
 {
     private static InputState currentState = InputState.Gameplay;
 

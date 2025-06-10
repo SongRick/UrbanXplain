@@ -60,7 +60,7 @@ namespace UrbanXplain
         void Update()
         {
             // We only process clicks, not continuous checks.
-            if (InputManager.GetGameMouseButtonDown(0)) // Check for left mouse button click
+            if (GlobalInputManager.GetGameMouseButtonDown(0)) // Check for left mouse button click
             {
                 ProcessClick();
             }

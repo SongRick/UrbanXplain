@@ -14,7 +14,7 @@ public class PauseMenuController : MonoBehaviour
         // 初始时菜单应该是关闭的
         pauseMenuPanel.SetActive(true);
         isMenuVisible = true;
-        InputManager.SetState(InputState.UIOnly); // 确保初始状态正确
+        GlobalInputManager.SetState(InputState.UIOnly); // 确保初始状态正确
         Time.timeScale = 0f;
     }
 
@@ -41,13 +41,13 @@ public class PauseMenuController : MonoBehaviour
         if (isMenuVisible)
         {
             // 打开菜单：切换到UIOnly模式，暂停时间
-            InputManager.SetState(InputState.UIOnly);
+            GlobalInputManager.SetState(InputState.UIOnly);
             Time.timeScale = 0f;
         }
         else
         {
             // 关闭菜单：恢复Gameplay模式，恢复时间
-            InputManager.SetState(InputState.Gameplay);
+            GlobalInputManager.SetState(InputState.Gameplay);
             Time.timeScale = 1f;
         }
     }

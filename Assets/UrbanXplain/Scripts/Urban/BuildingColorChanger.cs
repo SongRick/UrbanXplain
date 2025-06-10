@@ -62,14 +62,14 @@ namespace UrbanXplain
             }
 
             // Check for input to toggle the function-based color view.
-            if (InputManager.GetGameKeyDown(highlightKeyByFunction))
+            if (GlobalInputManager.GetGameKeyDown(highlightKeyByFunction))
             {
                 if (!inputField.isFocused)
                     ToggleFunctionColorView();
             }
 
             // Check for input to toggle the energy-based color view.
-            if (InputManager.GetGameKeyDown(highlightKeyByEnergy))
+            if (GlobalInputManager.GetGameKeyDown(highlightKeyByEnergy))
             {
                 if (!inputField.isFocused)
                     ToggleEnergyColorView();
