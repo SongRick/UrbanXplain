@@ -1,7 +1,7 @@
-// --- START OF FILE: PresetManager.cs ---
+// --- START OF FILE: PresetManager.cs (MODIFIED) ---
 using UnityEngine;
 using System.Collections.Generic;
-using System.Collections; // Required for IEnumerator
+using System.Collections;
 
 namespace UrbanXplain
 {
@@ -11,10 +11,10 @@ namespace UrbanXplain
         [System.Serializable]
         public class CityPreset
         {
-            public string presetName; // 用于在UI上显示的名称
+            public string presetName;
             [TextArea(3, 10)]
-            public string instruction; // 用于在悬停预览面板中显示的文本
-            public TextAsset jsonFile; // 预设的JSON数据文件
+            public string instruction;
+            public TextAsset jsonFile;
         }
 
         [Header("Preset Configuration")]
@@ -45,7 +45,6 @@ namespace UrbanXplain
                 yield break;
             }
 
-            // 等待核心数据加载完成
             yield return new WaitUntil(() => deepSeekAPI.buildingSpawnerJson.IsCsvDataLoaded);
 
             Debug.Log("PresetManager: Dependencies ready. Creating UI buttons...");
@@ -56,14 +55,19 @@ namespace UrbanXplain
         void CreatePresetButtonsViaManager()
         {
             presetUIManager.ClearButtons(); // 先清空旧按钮
+
+            // 1. 创建所有的预设按钮
             for (int i = 0; i < presets.Count; i++)
             {
                 presetUIManager.CreateButtonForPreset(
-                    i,                          // 预设的唯一ID (就是它在列表中的索引)
-                    presets[i].presetName,      // 按钮上显示的名称
-                    presets[i].instruction      // 悬停时预览的文本
+                    i,
+                    presets[i].presetName,
+                    presets[i].instruction
                 );
             }
+
+            // --- NEW: 2. 在所有预设按钮创建完毕后，添加清空按钮 ---
+            presetUIManager.AddClearButton();
         }
 
         // 公共方法，由UI管理器在按钮被点击时调用
